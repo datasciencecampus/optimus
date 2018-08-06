@@ -130,13 +130,13 @@ o.replace_model()
 ## Authors / Contributors
 
 #### Data Science Campus - Office for National Statistics
-Steven Hopkins
-Gareth Clews
-Arturus Eidukus  
-Lucy Gwilliam
+* Steven Hopkins
+* Gareth Clews
+* Arturus Eidukus  
+* Lucy Gwilliam
 
 #### Department for the Environment, Food and Rural Affairs
-Tom Hopkinson
+* Tom Hopkinson
 
 ## License
 
