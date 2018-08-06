@@ -10,7 +10,7 @@ import pandas as pd
 # project
 from scripts.data import Loader
 from scripts.clustering import Clusterer, ClusterConstructor
-from scripts.labeling import EditDistance, WordGram, CharGram, Hypernyms
+from scripts.labelling import EditDistance, WordGram, CharGram, Hypernyms
 from scripts.utils import Gatekeeper, KNN
 
 
