@@ -1,0 +1,12 @@
+.headertron {
+  background-color: white;
+}
+
+.half-size {
+  max-width: 30%;
+  height:auto;
+}
+
+._dash-undo-redo {
+  display: none;
+}

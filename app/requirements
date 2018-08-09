@@ -1,0 +1,6 @@
+dash==0.22.0
+dash-core-components
+dash-html-components
+plotly
+flask
+pandas
