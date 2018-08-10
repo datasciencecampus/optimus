@@ -55,23 +55,6 @@ app.layout = html.Div([
         rel='stylesheet',
         href='/static/stylesheet.css'),
 
-    # main chunk
-    html.Div([
-
-        html.Img(src='/static/black_logo.jpg',
-        className="half-size"),
-
-        html.H1("o p t i m u s",
-                className='display-3 text-uppercase'),
-
-        html.P("""
-               A complementary application intended to help relabel clusters
-               created by the Optimus pipeline.
-               """,
-               className='lead'),
-
-    ], className='jumbotron headertron p-1 mb-0'),
-
     html.Div([
 
         html.Div([
@@ -94,7 +77,12 @@ app.layout = html.Div([
         html.Div([
             html.H1('Current cluster: '),
             html.P(id='my-cluster', className='display-3')
-            ], className='col-10'),
+            ], className='col-5'),
+
+        html.Div([
+            html.Img(src='/static/black_logo.jpg',
+            className='img-fluid')
+        ], className='col-5 container'),
 
 
 
@@ -105,12 +93,17 @@ app.layout = html.Div([
         html.Div([
             html.Div([
 
-                html.P('Accept the predicted cluster label', className='mb-0'),
+                html.P('Accept or reject the predicted cluster label', className='mb-0'),
 
                 html.Button('Accept',
                         id='accept',
                         n_clicks_timestamp=0,
                         className="btn btn-warning mb-1"),
+
+                html.Button('Reject',
+                        id='reject',
+                        n_clicks_timestamp=0,
+                        className="btn btn-danger mb-1 ml-1"),
 
                 html.P('Provide a new label manually', className='mb-0'),
 
@@ -230,6 +223,7 @@ def trigger(value):
     Output('my-cluster', 'children'),
     [Input('rename', 'n_clicks_timestamp'),
      Input('accept', 'n_clicks_timestamp'),
+     Input('reject', 'n_clicks_timestamp'),
      Input('pick-name', 'n_clicks_timestamp'),
      Input('pick-tier', 'n_clicks_timestamp')],
     [State('my-cluster', 'children'),
@@ -240,6 +234,7 @@ def trigger(value):
 )
 def label(rename,
           accept,
+          reject,
           accept_dropdown,
           tier_dropdown,
           cluster,
@@ -264,6 +259,7 @@ def label(rename,
     buttons = {
         'rename': float(rename),
         'accept': float(accept),
+        'reject': float(reject),
         'accept_dropdown': float(accept_dropdown),
         'tier_dropdown': float(tier_dropdown)
     }
@@ -284,6 +280,8 @@ def label(rename,
             for label in new_label[df['current_labels'] == current_cluster].unique():
                 if label not in config['options']:
                     config['options'].append(label)
+        elif btn == 'reject':
+            relabeling('SKIPPED')
 
         elif btn == 'accept_dropdown':
             relabeling(premade_dropdown_value)
@@ -353,19 +351,17 @@ def clear_tier_dropdown(_):
     """
     return ''
 
-
 @app.callback(
     Output('my-dropdown', 'options'),
     [Input('my-cluster', 'children')],
 )
 def add_to_dropdown(_):
-    # TODO: see where '' is added solve it at the root not here.
     """
     Add a new entry to the options of a dropdown. Returns a list which
     then gets assigned to 'my-dropdown' options attribute.
     """
     return [{'label': string, 'value': string}
-            for string in config['options'] if string != '']
+            for string in sorted(config['options']) if string != '']
 
 
 # needed to serve local css
@@ -383,4 +379,4 @@ def static_file(path):
 
 # Boilerplate
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
