@@ -8,19 +8,34 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Firstly the user should clone this git repository
+You will need the following tools in order to be able to set up and use optimus:
 
+- A modern MacOS or linux installation, Windows is not currently supported and
+  you are on your own trying it there. This will cover tools such as wget/curl
+  and unzip that we require. We also need the following non-standard tools.
+- [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
+- [python 3.6](https://www.python.org) or later
+- [git](https://git-scm.com)
+
+Firstly the user should clone this git repository
 ```
 git clone git@github.com:datasciencecampus/optimus
 ```
 
-Need to add something here about requirements.sh etc and all the python prerequisites
+Within the repo is a file named `setup.zsh`. This is a command line tool to
+install all of the other things you need. For help using this, invoke the script
+as
 
-The [FastText wikipedia word embeddings](https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md) model needs to then be downloaded.
+``` sh
+. setup.zsh -h
+```
 
-### Pipeline methodology
+This script allows you to download the [FastText wikipedia word
+embeddings](https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md)
+model and places it in the optimus directory. If your project is elsewhere and
+you are not working in optimus directly then it is recommended to use this script to
+download the model and then you can move it to be local to your working directory.
 
-The Optimus pipeline uses
 
 ## How to use the python module.
 
@@ -132,7 +147,7 @@ o.replace_model()
 #### Data Science Campus - Office for National Statistics
 * Steven Hopkins
 * Gareth Clews
-* Arturus Eidukus  
+* Arturus Eidukus
 * Lucy Gwilliam
 
 #### Department for the Environment, Food and Rural Affairs

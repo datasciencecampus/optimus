@@ -4,7 +4,8 @@ local -a help all py ft
 zparseopts h=help   -help=help\
            a=all    -all=all\
            p=py     -py=py\
-           f=ft     -ft=ft
+           f=ft     -ft=ft\
+           d=dl     -dl=dl
 
 
 #-- Functions -------------------------------------------------------------------
@@ -19,7 +20,8 @@ help () {
       -h --help       prints this message
       -p --py         prepare the python environment without fastText
       -f --ft         install fastText from the git repo
-      -a --all        same as -pf
+      -d --dl         download the wikipedia model for fasttext local to optimus
+      -a --all        same as -pfd
   "
 }
 
@@ -42,8 +44,6 @@ ft () {
 
   # Check that we have all the required tools to build fastText
   # I'm going to ignore git and assume nobody is doing 'download' from github
-  [[ -n $(command -v cmake) ]] || (echo "Please install cmake first" && exit)
-  [[ -n $(command -v make)  ]] || (echo "Please install make first"  && exit)
   [[ -n $(command -v pip3)  ]] &&  alias pip='pip3'
   [[ -n $(command -v pip)   ]] || (echo "PIP not found in path"      && exit)
 
@@ -55,10 +55,28 @@ ft () {
 }
 
 
+dl () {
+  [[ -a models/wiki.en.bin ]] && echo "Model already exists, exiting" && exit
+
+  [[ -n $(command -v wget) ]] && alias download="wget"
+  [[ -n $(command -v curl) ]] && alias download="curl -o wiki.en.zip"
+  # in the case both exist I don't care and will just prefer curl
+
+  mkdir models && cd models
+  download https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
+  [[ -n $(command -v unzip) ]] &&\
+    unzip wiki.en.zip ||\
+    (echo "No unzip tool, exiting" && exit)
+
+  cd ..
+}
+
+
 # do everything
 all () {
   py
   ft
+  dl
 }
 
 
@@ -66,10 +84,11 @@ all () {
 
 [[ -n $py  ]] && py
 [[ -n $ft  ]] && ft
+[[ -n $dl  ]] && dl
 [[ -n $all ]] && all
 
 # catch all for no arguments -- prints help
-[[ -z $(echo $py $ft $all) || -n $help ]] && help
+[[ -z $(echo $py $ft $dl $all) || -n $help ]] && help
 
 # remove the log on successful completion
 [[ -a setup.log ]] && echo "** Cleaning up installation" && rm setup.log
