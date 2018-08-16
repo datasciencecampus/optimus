@@ -37,7 +37,7 @@ you are not working in optimus directly then it is recommended to use this scrip
 download the model and then you can move it to be local to your working directory.
 
 
-## How to use the python module.
+## How to use the python module
 
 #### Importing Optimus
 Import Optimus into python either through the whole module

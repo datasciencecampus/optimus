@@ -9,9 +9,6 @@ zparseopts h=help   -help=help\
 
 
 #-- Functions -------------------------------------------------------------------
-
-
-
 help () {
   echo "
     -*- o p t i m u s -*-
@@ -28,7 +25,6 @@ help () {
 
 py () {
   echo "** Installing required python modules"
-  echo "-- If any errors occur during installation please check setup.log"
 
   # checking that the system is running python 3 [dependency]
   [[ -n $(command -v python3) ]] || (echo "No python 3 interpreter" && exit)
@@ -40,7 +36,6 @@ py () {
 
 ft () {
   echo "** Installing fasttext"
-  echo "-- If any errors occur during installation please check setup.log"
 
   # Check that we have all the required tools to build fastText
   # I'm going to ignore git and assume nobody is doing 'download' from github
@@ -58,11 +53,12 @@ ft () {
 dl () {
   [[ -a models/wiki.en.bin ]] && echo "Model already exists, exiting" && exit
 
-  [[ -n $(command -v wget) ]] && alias download="wget"
+  alias download="wget"
   [[ -n $(command -v curl) ]] && alias download="curl -o wiki.en.zip"
-  # in the case both exist I don't care and will just prefer curl
+  # assume wget and in the case both exist prefer curl
 
-  mkdir models && cd models
+  [[ -a './models/' ]] ||  mkdir models
+  cd models
   download https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
   [[ -n $(command -v unzip) ]] &&\
     unzip wiki.en.zip ||\
@@ -81,6 +77,7 @@ all () {
 
 
 #-- Runtime ---------------------------------------------------------------------
+echo "-- If any errors occur during installation please check setup.log"
 
 [[ -n $py  ]] && py
 [[ -n $ft  ]] && ft
