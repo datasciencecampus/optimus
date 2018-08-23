@@ -1,5 +1,5 @@
 {
-  "data":"ENTER_DATA_LOCATION_IN_CONFIG_JSON",
+  "data":"prowl.csv",
   "out":"output.csv",
   "min_cluster":5,
   "options":[],

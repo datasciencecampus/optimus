@@ -9,15 +9,8 @@ text = pd.Series(['chocolate', 'chocolate biscuits', 'frozen pizza', 'frozn pizz
                  'milk', 'powder', 'baby food', ' oxygen cylinders', 'methane', 'argon', 'fertilizers',
                  'steel gates', 'metal', 'scrap metal', 'steel posts', 'fences and steel Products'])
 
-text
-
-o = Optimus(config_path='config.json', cutoff = 6, stepsize = 0.25)
 
 
-results = o(text, save_csv=True, full=True, verbose=True, runKNN=False)
+o = Optimus(config_path='config.json', cutoff = 6, stepsize = 1)
 
-results
-
-resultsKNN = o(text, save_csv=True, full = True, verbose = False, runKNN=True)
-
-resultsKNN
+results = o(text, save_csv=True, full = True, verbose = True, runKNN=False)

@@ -6,6 +6,7 @@ import time
 # third party
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
+import pandas as pd
 
 # named
 
@@ -45,6 +46,24 @@ class KNN:
         self.matrix = matrix
         # save gatekeeper into an attribute
         self.gatekeeper = gatekeeper
+
+        #only keep duplicates to train knn - implicitly these have and are exclusively
+        # those that have been relabelled
+        df = gatekeeper.prowl
+        ids = df["current_labels"]
+
+        print(f"ids")
+        print(ids)
+
+        self.train_data= df[ids.isin(ids[ids.duplicated()])]
+
+        self.train_knn = np.array(
+            self.embed(self.train_data["current_labels"], self.matrix)
+        )
+
+        print(f"self.train_knn")
+        print(self.train_knn)
+
         # TODO: check if the Gatekeeper.non_selected is really what we need to
         self.non_selected = np.array(
             self.embed(gatekeeper.non_selected, self.matrix))
@@ -96,9 +115,11 @@ class KNN:
 
         """
         # create an fit a classifier based on the current_labels data
-        classifier = KNeighborsClassifier()
-        train_X = self.current_labels[:, 1:]
-        train_y = self.current_labels[:, 0]
+        classifier = KNeighborsClassifier(n_neighbors=2)
+        train_X = self.train_knn[:, 1:]
+        train_y = self.train_knn[:, 0]
+
+        print(train_y)
 
         classifier.fit(train_X, train_y)
         self.KNN = classifier
@@ -127,17 +148,25 @@ class KNN:
         # run the newly passed labels through the embedding etc and
         # get predictions for them
         if X:
+            print("or this one")
             predictions = self.KNN.predict(
                 np.array(self.embed(X, self.matrix))[:, 1:])
             return np.array(list(zip(X, predictions)))
         else:  # if no X is passed run the non_selected labels from gatekeeper
-            return np.array(
+            print("correct prediction triggered")
+            pred =  np.array(
                 list(
                     zip(
-                        self.gatekeeper.non_selected,
-                        self.KNN.predict(self.non_selected[:, 1:])
+                        self.non_selected,
+                        self.KNN.predict(self.current_labels[:, 1:])
                     )
                 ))
+            print("current_labels")
+            print(self.current_labels[:, 1:])
+            print(self.current_labels[:, 1:].shape)
+            print(f"pred")
+            print(pred)
+            return(pred)
 
     def __slideshow(self):
         """
