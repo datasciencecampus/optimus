@@ -60,7 +60,7 @@ class Loader:
 
         # export the original desc
         pd.DataFrame(self.words).to_csv(
-            'output/join_output.csv', header=False, index=False)
+            'join_output.csv', header=False, index=False)
 
     # -- Functions ------------------------------------------------------------
     def load(self):
