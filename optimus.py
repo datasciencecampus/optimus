@@ -337,11 +337,12 @@ class Optimus:
             self.vprint('_' * 79)
 
         # if requested run a KNN on the non_labeled data
-        if runKNN:
-            self.vprint(f"-- Performing KNN")
-            K = KNN(H, self.matrix)
-            self.KNN_predictions = pd.DataFrame(K())
-            self.KNN_predictions.to_csv('output/knn.csv')
+        #if runKNN:
+        #    self.vprint(f"-- Performing KNN")
+        #    K = KNN(H, self.matrix)
+        #    self.KNN_predictions = pd.DataFrame(K())
+        #    self.KNN_predictions.to_csv('knn_results.csv')
+        #    self.vprint(self.KNN_predictions)
 
         # clean up after yourself
         self.clean_up()
