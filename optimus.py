@@ -3,6 +3,7 @@
 import json
 import gc
 
+
 # third party
 import fastText as ft
 import pandas as pd
@@ -52,6 +53,18 @@ class Optimus:
         """
 
         self.kw = kw
+
+        # perform a check and raise a warning to the user if they haven't
+        # provided a config file path.
+        if not config_path:
+            print(
+            """
+            WARNING: A path to the config.json file is not specified in
+            the config_path parameter of the Optimus object.
+            The default file located in the 'etc' folder will be used and
+            may lead to undexpected results and issues.
+            """)
+
         self.config_path = config_path
 
     def load_config(self, path='', default_config='./etc/config.json'):
@@ -171,6 +184,23 @@ class Optimus:
             full or partial results of the pipeline
 
         """
+
+        # return the encoded words to their original stat
+        if self.config['decode_output']:
+
+            def decoder(s):
+                """Decode all the encoded trouble words in the output"""
+                s = str(s) # ensuring that we don't get errors if we get a string
+                d = self.config['trouble']
+                # the reason its sorted is because if a label contains HZ and
+                # there is a H and a HZ to decode the H could get decoded first
+                # leaving just capital Zs
+                for key in sorted(d, key=lambda k: len(d[k]), reverse=True):
+                    s = s.replace(d[key], key)
+                return s
+
+            prowl.iloc[:,1:] = prowl.iloc[:,1:].applymap(decoder)
+
         if save_csv:
             prowl.to_csv('optimus_results.csv', header=True, index=False)
 
