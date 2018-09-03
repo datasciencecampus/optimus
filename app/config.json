@@ -1,8 +1,8 @@
 {
-  "data":"prowl.csv",
+  "data":"optimus_results.csv",
   "out":"output.csv",
-  "min_cluster":5,
-  "options":[],
+  "min_cluster":2,
+  "options":["paper","vehicles","other"],
   "smart_labeling":false,
   "tiers":2
 }

@@ -95,6 +95,7 @@
     "imaginary being",
     "psychological feature"
   ],
+  "decode_output":true,
   "regex": [
     ["[/!#,.`\\[\\]\\(\\)]", " "],
     ["  ", " "],
