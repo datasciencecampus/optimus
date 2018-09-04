@@ -22,7 +22,7 @@ class biter(object):
             return self.collection[self.index]
 
         except IndexError:
-            self.index = len(self.collection)
+            self.index = len(self.collection) - 1
             raise StopIteration
 
     def prev(self):
@@ -49,6 +49,7 @@ def config_app():
     # settings to serve css locally
     app.css.config.serve_locally = True
     app.scripts.config.serve_locally = True
+    app.title = 'Optimus'
 
     return app
 

@@ -2,27 +2,21 @@
 # base
 import os
 import json
-from time import gmtime, strftime
 from collections import Counter
 
 # third party
 import pandas as pd
 import dash
-import dash_html_components as html
-import dash_core_components as dcc
 import plotly.figure_factory as ff
 from flask import send_from_directory
 from dash.dependencies import Input, Output, State
 
 # project
 from apputils import config_app, preprocess, biter, relabeling, which_button
-
+from layout import retrieve_layout
 
 # GENERAL SET UP
 # -----------------------------------------------------------------------------
-
-# GET START TIME
-curr_time = f"The server was started at: {strftime('%H:%M:%S',gmtime())}"
 
 # CREATE APP
 app = config_app()
@@ -37,168 +31,10 @@ keep, cols = preprocess(config)
 # CREATE GENERATOR THROUGH CLUSTERS
 gen = biter(keep)
 
-
 # APP LAYOUT
 # -----------------------------------------------------------------------------
 
-app.layout = html.Div([
-    html.Title('OPTIMUS'),
-    # link all css
-    # bootstrap
-    html.Link(
-        rel='stylesheet',
-        href='/static/bootstrap.css'),
-
-    # local css
-    html.Link(
-        rel='stylesheet',
-        href='/static/stylesheet.css'),
-
-    # placeholder for the back button
-    html.Div([
-
-    ],
-    style={"display": 'none'},
-    id='undo-state'),
-
-    html.Div([
-
-    ],
-    style={"display": 'none'},
-    id='previous-label'),
-
-    html.Div([
-
-        html.Div([
-
-            html.H3('Information:'),
-
-            # time started
-            html.P(curr_time),
-
-            # output path
-
-            html.P(f"Output will be saved saved in: {config['out']}"),
-
-            # progress tracker
-            html.Div(id='progress')
-
-        ], className='col-2'),
-
-        # cluster name
-        html.Div([
-            html.H1('Current cluster: '),
-            html.P(id='my-cluster', className='display-3')
-            ], className='col-5'),
-
-        html.Div([
-            html.Img(src='/static/black_logo.jpg',
-            className='img-fluid')
-        ], className='col-5 container'),
-
-
-
-    ], className="row mb-3 p-1 border-bottom border-secondary"),
-
-
-    html.Div([
-        html.Div([
-
-            html.Button('<',
-                id='undo',
-                n_clicks_timestamp=0,
-                className="btn btn-secondary mb-1"),
-
-            html.Button('>',
-                id='redo',
-                n_clicks_timestamp=0,
-                className="btn btn-secondary mb-1"),
-
-            html.Div([
-
-                html.P('Accept or reject the predicted cluster label', className='mb-0'),
-
-                html.Button('Accept',
-                        id='accept',
-                        n_clicks_timestamp=0,
-                        className="btn btn-warning mb-1"),
-
-                html.Button('Skip',
-                        id='reject',
-                        n_clicks_timestamp=0,
-                        className="btn btn-danger mb-1 ml-1"),
-
-                html.P('Provide a new label manually', className='mb-0'),
-
-                html.Div([
-                    dcc.Input(id='my-input',
-                          placeholder='Enter a value...',
-                          type='text',
-                          value='',
-                          className='form-control'
-                          ),
-                    ], className='mb-1'),
-
-                html.Button('Done',
-                            id='rename',
-                            n_clicks_timestamp=0,
-                            className="btn btn-secondary mb-1"),
-
-
-            ]),
-
-            # dropdown for cluster names
-            html.Div([
-
-                html.P('Pick a label from a predefined list', className='mb-0'),
-
-                dcc.Dropdown(id='my-dropdown',
-                             options=[{'label': l, 'value': l}
-                                      for l in config['options']],
-                             value='SKIPPED',
-                             className='mb-1'
-                             ),
-
-                html.Button('Done',
-                            id='pick-name',
-                            n_clicks_timestamp=0,
-                            className="btn btn-secondary mb-1")
-            ]),
-
-            # tier dropdown
-            html.Div([
-
-                html.P('Pick earlier tier as the new label', className='mb-0'),
-
-                dcc.Dropdown(id='tier-dropdown',
-                             options=[{'label': l, 'value': l}
-                                      for l in cols if 'tier_' in l],
-                             value='SKIPPED',
-                             className='mb-1'
-                             ),
-
-                html.Button('Done',
-                            id='pick-tier',
-                            n_clicks_timestamp=0,
-                            className="btn btn-secondary mb-1")
-            ]),
-
-        ], className='col-2'),
-
-        # table
-        dcc.Graph(
-            id='my-table',
-            config={
-                'staticPlot': True,
-                'displayModeBar': True
-            }, className='col-10')
-
-    ], className='row pt-0 mt-0'),
-
-
-
-], className='')
-
+app.layout = retrieve_layout(cols, config)
 
 # APP CALLBACK FUNCTIONS
 # -----------------------------------------------------------------------------
@@ -255,7 +91,8 @@ def trigger(value):
      State('my-input', 'value'),
      State('my-dropdown', 'value'),
      State('tier-dropdown', 'value'),
-     State('my-cluster', 'children')]
+     State('my-cluster', 'children'),
+     State('tier-checklist', 'values')]
 )
 def label(rename,
           accept,
@@ -268,8 +105,10 @@ def label(rename,
           label,
           premade_dropdown_value,
           tier_dropdown_value,
-          current_cluster
+          current_cluster,
+          tier_checklist_values
           ):
+
     df = pd.read_csv(config['out'])
 
     buttons = {
@@ -305,6 +144,7 @@ def label(rename,
             for label in new_label[df['current_labels'] == current_cluster].unique():
                 if label not in config['options']:
                     config['options'].append(label)
+
         elif btn == 'reject':
             relabeling(df, config, cluster,  'SKIPPED')
 
@@ -312,10 +152,13 @@ def label(rename,
             relabeling(df, config, cluster,  premade_dropdown_value)
 
         elif btn == 'tier_dropdown':
-            new_label = df[tier_dropdown_value]
+            new_label = df[tier_dropdown_value].map(
+                        lambda label: label if label in tier_checklist_values
+                        else 'SKIPPED')
             relabeling(df, config, cluster,  new_label)
             for label in new_label[df['current_labels'] == current_cluster].unique():
-                if label not in config['options']:
+                if (label not in config['options'] and
+                   label != 'SKIPPED' and label in tier_checklist_values):
                     config['options'].append(label)
 
         try:
@@ -387,6 +230,33 @@ def add_to_dropdown(_):
     """
     return [{'label': string, 'value': string}
             for string in sorted(config['options']) if string != '']
+
+@app.callback(
+    Output('tier-checklist', 'options'),
+    [Input('tier-dropdown', 'value')],
+    [State('my-cluster', 'children')]
+)
+def get_checklist(tier, cluster):
+
+    if tier != '':
+        df = pd.read_csv(config['out'])
+        unique = df.loc[df['current_labels'] == cluster, tier].unique()
+
+        return [{'label':val, 'value':val} for val in unique]
+
+    else:
+
+        return []
+
+@app.callback(
+    Output('tier-checklist', 'values'),
+    [Input('tier-checklist', 'options')],
+    [State('tier-checklist', 'options')]
+)
+def tick_all(_, options):
+
+    return [d['value'] for d in options]
+
 
 
 # needed to serve local css
