@@ -2,7 +2,6 @@
 # base
 import os
 import json
-import operator
 from time import gmtime, strftime
 from collections import Counter
 
@@ -16,7 +15,7 @@ from flask import send_from_directory
 from dash.dependencies import Input, Output, State
 
 # project
-from apputils import config_app, preprocess, unique_gen
+from apputils import config_app, preprocess, biter, relabeling, which_button
 
 
 # GENERAL SET UP
@@ -36,7 +35,7 @@ with open('config.json') as file:
 keep, cols = preprocess(config)
 
 # CREATE GENERATOR THROUGH CLUSTERS
-gen = unique_gen(keep)
+gen = biter(keep)
 
 
 # APP LAYOUT
@@ -54,6 +53,19 @@ app.layout = html.Div([
     html.Link(
         rel='stylesheet',
         href='/static/stylesheet.css'),
+
+    # placeholder for the back button
+    html.Div([
+
+    ],
+    style={"display": 'none'},
+    id='undo-state'),
+
+    html.Div([
+
+    ],
+    style={"display": 'none'},
+    id='previous-label'),
 
     html.Div([
 
@@ -91,6 +103,17 @@ app.layout = html.Div([
 
     html.Div([
         html.Div([
+
+            html.Button('<',
+                id='undo',
+                n_clicks_timestamp=0,
+                className="btn btn-secondary mb-1"),
+
+            html.Button('>',
+                id='redo',
+                n_clicks_timestamp=0,
+                className="btn btn-secondary mb-1"),
+
             html.Div([
 
                 html.P('Accept or reject the predicted cluster label', className='mb-0'),
@@ -100,7 +123,7 @@ app.layout = html.Div([
                         n_clicks_timestamp=0,
                         className="btn btn-warning mb-1"),
 
-                html.Button('Reject',
+                html.Button('Skip',
                         id='reject',
                         n_clicks_timestamp=0,
                         className="btn btn-danger mb-1 ml-1"),
@@ -225,7 +248,9 @@ def trigger(value):
      Input('accept', 'n_clicks_timestamp'),
      Input('reject', 'n_clicks_timestamp'),
      Input('pick-name', 'n_clicks_timestamp'),
-     Input('pick-tier', 'n_clicks_timestamp')],
+     Input('pick-tier', 'n_clicks_timestamp'),
+     Input('undo', 'n_clicks_timestamp'),
+     Input('redo', 'n_clicks_timestamp')],
     [State('my-cluster', 'children'),
      State('my-input', 'value'),
      State('my-dropdown', 'value'),
@@ -237,6 +262,8 @@ def label(rename,
           reject,
           accept_dropdown,
           tier_dropdown,
+          undo,
+          redo,
           cluster,
           label,
           premade_dropdown_value,
@@ -245,50 +272,48 @@ def label(rename,
           ):
     df = pd.read_csv(config['out'])
 
-    def relabeling(label):
-        df.loc[(df['current_labels'] == cluster), 'new_labels'] = label
-        # this next line ensure that any entries who happen to have the same
-        # suggested label get classfied
-        if config['smart_labeling']:
-            df.loc[(df['current_labels'] == label), 'new_labels'] = label
-        df.to_csv(config['out'], index=False)
-
-    def which_button(btn_dict):
-        return max(btn_dict.items(), key=operator.itemgetter(1))[0]
-
     buttons = {
         'rename': float(rename),
         'accept': float(accept),
         'reject': float(reject),
         'accept_dropdown': float(accept_dropdown),
-        'tier_dropdown': float(tier_dropdown)
+        'tier_dropdown': float(tier_dropdown),
+        'undo':float(undo),
+        'redo':float(redo)
     }
-    btn = which_button(buttons)
 
     if label == '' and cluster == '':  # create the first chart
         next(gen)
 
     else:
-        if btn == 'rename':
-            relabeling(label)
+        btn = which_button(buttons)
+
+        if btn == 'undo':
+            return gen.prev()
+
+        elif btn == 'redo':
+            return next(gen)
+
+        elif btn == 'rename':
+            relabeling(df, config, cluster,  label)
             if label not in config['options']:
                 config['options'].append(label)
 
         elif btn == 'accept':
             new_label = df['current_labels']
-            relabeling(new_label)
+            relabeling(df, config, cluster,  new_label)
             for label in new_label[df['current_labels'] == current_cluster].unique():
                 if label not in config['options']:
                     config['options'].append(label)
         elif btn == 'reject':
-            relabeling('SKIPPED')
+            relabeling(df, config, cluster,  'SKIPPED')
 
         elif btn == 'accept_dropdown':
-            relabeling(premade_dropdown_value)
+            relabeling(df, config, cluster,  premade_dropdown_value)
 
         elif btn == 'tier_dropdown':
             new_label = df[tier_dropdown_value]
-            relabeling(new_label)
+            relabeling(df, config, cluster,  new_label)
             for label in new_label[df['current_labels'] == current_cluster].unique():
                 if label not in config['options']:
                     config['options'].append(label)

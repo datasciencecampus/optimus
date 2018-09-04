@@ -1,18 +1,42 @@
 # imports
+# base
+import operator
 # third party
 import pandas as pd
 import dash
 
 # NON-CALLBACK FUNCTIONS REQUIRED FOR THE APP
 # -----------------------------------------------------------------------------
-def unique_gen(lst):
+class biter(object):
     """
-    Creates a generator that will alow to
-    use the 'next' function to move through.all
-    clusters.
+    bidirectional iterator
     """
-    for item in lst:
-        yield item
+    def __init__(self, collection=['one','two','three','four']):
+        self.collection = collection
+        self.index = -1
+
+    def __next__(self):
+
+        try:
+            self.index += 1
+            return self.collection[self.index]
+
+        except IndexError:
+            self.index = len(self.collection)
+            raise StopIteration
+
+    def prev(self):
+        # prevent negative outcomes
+        if self.index != 0:
+            self.index -= 1
+
+        return self.collection[self.index]
+
+
+
+    def __iter__(self):
+        return self
+
 
 def config_app():
     """
@@ -28,6 +52,8 @@ def config_app():
 
     return app
 
+def which_button(btn_dict):
+    return max(btn_dict.items(), key=operator.itemgetter(1))[0]
 
 def preprocess(config):
     """
@@ -56,3 +82,12 @@ def preprocess(config):
     df.to_csv(config['out'], index=False)
 
     return keep, df.columns
+
+
+def relabeling(df, config, cluster, label):
+    df.loc[(df['current_labels'] == cluster), 'new_labels'] = label
+    # this next line ensure that any entries who happen to have the same
+    # suggested label get classfied
+    if config['smart_labeling']:
+        df.loc[(df['current_labels'] == label), 'new_labels'] = label
+    df.to_csv(config['out'], index=False)
