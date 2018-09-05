@@ -1,71 +1,23 @@
 #imports
 # base
 import os
-import json
-from collections import Counter
 
 # third party
 import pandas as pd
 import dash
-import plotly.figure_factory as ff
 from flask import send_from_directory
 from dash.dependencies import Input, Output, State
 
 # project
-from apputils import config_app, preprocess, biter, relabeling, which_button
-from layout import retrieve_layout
+from scripts.apputils import setup, which_button, relabeling, draw_table
 
 # GENERAL SET UP
 # -----------------------------------------------------------------------------
 
-# CREATE APP
-app = config_app()
+app, config, keep, cols, gen = setup()
 
-# LOAD USER CONFIGS
-with open('config.json') as file:
-    config = json.load(file)
-
-# PREPROCESS DATA AND GET APROPRIATE CLUSTER LIST
-keep, cols = preprocess(config)
-
-# CREATE GENERATOR THROUGH CLUSTERS
-gen = biter(keep)
-
-# APP LAYOUT
+# APP CALLBACK FUNCTIONS - The reactive brain of the app.
 # -----------------------------------------------------------------------------
-
-app.layout = retrieve_layout(cols, config)
-
-# APP CALLBACK FUNCTIONS
-# -----------------------------------------------------------------------------
-def draw_table(value):
-    """
-    This function creates a table using the plotly module.
-    """
-
-    def _prepare_for_show(frame):
-        frame = frame.drop('new_labels', axis=1)
-        tiers = list(frame.filter(like='tier').columns)
-        tier_dict = {t:float(t[-1]) for t in tiers}
-
-        # pick only the top 2 tiers
-        save_tiers = [col for col,_ in
-                        Counter(tier_dict).most_common(config['tiers'])]
-
-        # reorder and trim
-        frame = frame[['current_labels','original'] + save_tiers]
-
-        return frame
-
-    df = _prepare_for_show(pd.read_csv(config['out']))
-
-    df = df[df['current_labels'] == value]
-
-    # table colorscale
-    colorscale = [[0, '#000000'],[.5, '#e2e2e2'],[1, '#ffffff']]
-
-    new_table_figure = ff.create_table(df, colorscale=colorscale)
-    return new_table_figure
 
 @app.callback(
     Output('my-table', 'figure'),
@@ -76,7 +28,7 @@ def trigger(value):
     Redraw the table when the cluster name in the 'my-clusters' object
     changes. Use the name of the cluster to select what will be in the table.
     """
-    return draw_table(value)
+    return draw_table(value, config)
 
 @app.callback(
     Output('my-cluster', 'children'),
@@ -110,7 +62,6 @@ def label(rename,
           ):
 
     df = pd.read_csv(config['out'])
-
     buttons = {
         'rename': float(rename),
         'accept': float(accept),
@@ -122,7 +73,7 @@ def label(rename,
     }
 
     if label == '' and cluster == '':  # create the first chart
-        next(gen)
+        gen.next()
 
     else:
         btn = which_button(buttons)
@@ -131,7 +82,7 @@ def label(rename,
             return gen.prev()
 
         elif btn == 'redo':
-            return next(gen)
+            return gen.next()
 
         elif btn == 'rename':
             relabeling(df, config, cluster,  label)
@@ -161,10 +112,8 @@ def label(rename,
                    label != 'SKIPPED' and label in tier_checklist_values):
                     config['options'].append(label)
 
-        try:
-            return next(gen)
-        except StopIteration:
-            return 'FINISHED!'
+        return gen.next()
+
 
 
 @app.callback(
@@ -182,7 +131,7 @@ def update_progress(_):
         if l in keep and _['new_labels'].notnull().all()
     ])
     n = len(keep)
-    return f'Currently working on cluster: {i}/{n}'
+    return f'Classified so far: {i}/{n} ({int((i/n)*100)}%)'
 
 
 @app.callback(
@@ -237,15 +186,11 @@ def add_to_dropdown(_):
     [State('my-cluster', 'children')]
 )
 def get_checklist(tier, cluster):
-
     if tier != '':
         df = pd.read_csv(config['out'])
         unique = df.loc[df['current_labels'] == cluster, tier].unique()
-
         return [{'label':val, 'value':val} for val in unique]
-
     else:
-
         return []
 
 @app.callback(
@@ -254,10 +199,7 @@ def get_checklist(tier, cluster):
     [State('tier-checklist', 'options')]
 )
 def tick_all(_, options):
-
     return [d['value'] for d in options]
-
-
 
 # needed to serve local css
 @app.server.route('/static/<path:path>')
@@ -272,6 +214,6 @@ def static_file(path):
     return send_from_directory(static_folder, path)
 
 
-# Boilerplate
+# run server
 if __name__ == '__main__':
     app.run_server(debug=True)

@@ -1,13 +1,8 @@
-# base
-from time import gmtime, strftime
-
 # third party
 import dash_html_components as html
 import dash_core_components as dcc
 
 def retrieve_layout(cols, config):
-    # GET START TIME
-    curr_time = f"The server was started at: {strftime('%H:%M:%S',gmtime())}"
 
     return html.Div([
         # link all css
@@ -26,9 +21,6 @@ def retrieve_layout(cols, config):
             html.Div([
 
                 html.H3('Information:'),
-
-                # time started
-                html.P(curr_time),
 
                 # output path
 
@@ -158,7 +150,5 @@ def retrieve_layout(cols, config):
                 }, className='col-10')
 
         ], className='row pt-0 mt-0'),
-
-
 
     ], className='')
