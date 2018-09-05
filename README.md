@@ -1,6 +1,15 @@
-# O P T I M U S
+# o p t i m u s
 
-A pipeline for classifying free-text strings
+A text processing pipeline for turning unstructured text data into hierarchical datasets.
+
+## What does Optimus do?
+The Data Science Campus has been exploring how to process unlabelled list data that is collected manually in an uncontrolled fashion with no supplementary information to allow aggregation of data.
+
+For further information on the methodology please read our [blog]().
+
+##WIP
+
+This is a working prototype of the pipeline and is still in development. The full release of the methodology and supporting web app is scheduled for the end of 2018.
 
 ## Getting Started
 
