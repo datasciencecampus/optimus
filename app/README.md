@@ -1,11 +1,11 @@
-#Optimus app documentation
+# Optimus app documentation
 # NOTE:
 The UI and UX of the app are very experimental. They are subject to change quite substantially in the remaining time that this app will be supported/developed. Feedback on this is appreciated.
-##Quickstart (Linux and MacOS)
+## Quickstart (Linux and MacOS)
 A `quickstart.sh` script is provided within the app folder. This script will install the required python dependencies and will run the app automatically and open the browser to the app window.
 
 **NOTE:** set up the config.json file beforehand to point to the correct dataset path.
-##The manual set up
+## The manual set up
 In order for the app to run correctly you will need python 3 and the following python modules:
 ```
 dash (working with 0.22.0)
@@ -24,7 +24,7 @@ The app is then ready to launch by simply tweaking the config.json file and by l
 cd path/to/app/folder
 python app.py
 ```
-##Configuring the app
+## Configuring the app
 In order to configure the app open the `config.json` file with a text editor of your choice. The following settings will define how the app functions:
 
 ```json
@@ -56,7 +56,7 @@ In order to configure the app open the `config.json` file with a text editor of 
 
 }
 ```
-###Expected input file structure
+### Expected input file structure
 The expects a certain structure from the input csv file. The file must have a 'current_label' column and can have several 'tier_n' columns. The structure of the file with which this app was developed was as follows:
 
 | original   | tier_1 | tier_2 | ... | tier_n | current_labels |
@@ -67,7 +67,7 @@ The expects a certain structure from the input csv file. The file must have a 'c
 
 A file output from a full Optimus pipeline will work and is what was used to build this app.
 
-###Smart labelling
+### Smart labelling
 This feature checks the custom class input provided by user and if it finds any clusters in the dataset which have that same exact current_label as the newly provided class it will also accept these. This is particularly useful in labelling datasets with simple names.
 
 **Example:**
@@ -76,7 +76,7 @@ If a user provided new class name 'cars' any entries within the data which have 
 
 This behaviour might not always be wanted.
 
-##Usage
+## Usage
 The app will respect the cluster size threshold provided in the config.json file. It will thus select cluster that are larger or equal that size. The selected cluster labels will be presented to the user to categorise and relabel. The non-selected cluster based on this threshold will get a new label assigned as **'SKIPPED'**
 
 There are several relabelling options.
