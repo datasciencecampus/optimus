@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+set -e
+
 local -a help all py ft
 zparseopts h=help   -help=help\
            a=all    -all=all\
@@ -53,14 +55,15 @@ ft () {
 dl () {
   [[ -a models/wiki.en.bin ]] && echo "Model already exists, exiting" && exit
 
-  alias download="wget"
-  [[ -n $(command -v curl) ]] && alias download="curl -o wiki.en.zip"
-  # assume wget and in the case both exist prefer curl
-
   [[ -a './models/' ]] ||  mkdir models
   cd models
-  download https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
-  [[ -n $(command -v unzip) ]] &&\
+
+  set url="https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip"
+  [[ -n $(command -v curl) ]] && \
+    curl -o wiki.en.zip $url ||\
+    wget $url
+
+  [[ -N $(command -v unzip) ]] &&\
     unzip wiki.en.zip ||\
     (echo "No unzip tool, exiting" && exit)
 
