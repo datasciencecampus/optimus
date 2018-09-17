@@ -58,10 +58,7 @@ dl () {
   [[ -a './models/' ]] ||  mkdir models
   cd models
 
-  set url="https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip"
-  [[ -n $(command -v curl) ]] && \
-    curl -o wiki.en.zip $url ||\
-    wget $url
+  curl -o wiki.en.zip https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki.en.zip
 
   [[ -N $(command -v unzip) ]] &&\
     unzip wiki.en.zip ||\
