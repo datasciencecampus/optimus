@@ -3,7 +3,11 @@ import pandas as pd
 from optimus import Optimus
 
 
-#### for a pandas Series
+
+#### EXAMPLE OF USE
+
+# Either:
+#### 1. for a pandas Series
 
 print(text_1)
 
@@ -18,13 +22,15 @@ text = pd.Series(['chocolate', 'chocolate biscuits', 'frozen pizza', 'frozn pizz
                  'animal products', 'composite materials', 'Plasterboard', 'cardboard'])
 
 
+#### 2. from file
 #### to read from file 'words.csv' in the data folder - and convert to pandas Series
+
 text_1 = pd.read_csv("./data/words.csv", index_col=False, header=0)
 text_1 = pd.Series(text_1.iloc[:,0])
 
 
 
-
+#### Initialise Optimus object and run model
 
 o = Optimus(config_path='config.json', cutoff = 6, stepsize = 1)
 

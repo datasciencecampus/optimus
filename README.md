@@ -16,16 +16,14 @@ This is a working prototype of the pipeline and is still in development. The ful
 These instructions will get you a copy of the project up and running on your
 local machine for development and testing purposes.
 
-
 Documentation on the methods utilised and how Optimus functions is pending. This
 README will be updated to include links to this material once it is made available.
-
 
 ### Prerequisites
 
 You will need the following tools in order to be able to set up and use optimus:
 
-- A modern MacOS or linux installation, Windows is not currently supported and
+- A modern MacOS or linux installation, Windows is not supported and
   you are on your own trying it there
 - [curl](https://curl.haxx.se/)
 - [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
@@ -52,6 +50,9 @@ model and places it in the optimus directory. If your project is elsewhere and
 you are not working in optimus directly then it is recommended to use this script to
 download the model and then you can move it to be local to your working directory.
 
+### Quick Start example
+
+There is a quick start example script that demonstrates how to use the pipeline called `example.py` in the root directory. The final dataset is written to `optimus_results.csv` also in the root directory. 
 
 ## How to use the python module
 
