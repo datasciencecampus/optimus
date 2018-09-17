@@ -3,9 +3,13 @@
 A text processing pipeline for turning unstructured text data into hierarchical datasets.
 
 ## What does Optimus do?
-The Data Science Campus has been exploring how to process unlabelled list data that is collected manually in an uncontrolled fashion with no supplementary information to allow aggregation of data.
+The Data Science Campus has been exploring how to process unlabelled list data
+that is collected manually in an uncontrolled fashion with no supplementary
+information to allow aggregation of data. Please note that this project is
+intended to work on short descriptions, of no more than around 10 words. For longer
+text descriptions you may need to fork the repository and optimise some of the metrics.
 
-For further information on the methodology please read our [blog]().
+For further information on the methodology please read our [blog](https://datasciencecampus.ons.gov.uk/?p=1997).
 
 ## WIP
 
@@ -52,7 +56,7 @@ download the model and then you can move it to be local to your working director
 
 ### Quick Start example
 
-There is a quick start example script that demonstrates how to use the pipeline called `example.py` in the root directory. The final dataset is written to `optimus_results.csv` also in the root directory. 
+There is a quick start example script that demonstrates how to use the pipeline called `example.py` in the root directory. The final dataset is written to `optimus_results.csv` also in the root directory.
 
 ## How to use the python module
 
@@ -208,7 +212,7 @@ This project is licensed under the MIT License - see the
 
 ### Bag of Tricks for Efficient Text Classification
 
-[2] A. Joulin, E. Grave, P. Bojanowski, T. Mikolov, [*Bag of Tricks for Efficient Text Classification*](https://arxiv.org/abs/1607.01759)
+[1] A. Joulin, E. Grave, P. Bojanowski, T. Mikolov, [*Bag of Tricks for Efficient Text Classification*](https://arxiv.org/abs/1607.01759)
 
 ```
 @InProceedings{joulin2017bag,
