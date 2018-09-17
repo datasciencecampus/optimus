@@ -9,10 +9,10 @@ import fastText as ft
 import pandas as pd
 
 # project
-from scripts.data import Loader
-from scripts.clustering import Clusterer, ClusterConstructor
-from scripts.labelling import EditDistance, WordGram, CharGram, Hypernyms
-from scripts.utils import Gatekeeper, KNN
+from lib.data import Loader
+from lib.clustering import Clusterer, ClusterConstructor
+from lib.labelling import EditDistance, WordGram, CharGram, Hypernyms
+from lib.utils import Gatekeeper, KNN
 
 
 # -- Load Configs -------------------------------------------------------------

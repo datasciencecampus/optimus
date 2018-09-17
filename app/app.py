@@ -9,7 +9,7 @@ from flask import send_from_directory
 from dash.dependencies import Input, Output, State
 
 # project
-from scripts.apputils import setup, which_button, relabeling, draw_table
+from lib.apputils import setup, which_button, relabeling, draw_table
 
 # GENERAL SET UP
 # -----------------------------------------------------------------------------
