@@ -26,9 +26,8 @@ README will be updated to include links to this material once it is made availab
 You will need the following tools in order to be able to set up and use optimus:
 
 - A modern MacOS or linux installation, Windows is not currently supported and
-  you are on your own trying it there. This will cover programs such as wget/curl
-  and unzip that we require. We also need the following possibly non-standard
-  tools.
+  you are on your own trying it there
+- [curl](https://curl.haxx.se/)
 - [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
 - [python 3.6](https://www.python.org) or later
 - [git](https://git-scm.com)
