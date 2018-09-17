@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 
 # project
-from scripts.data import SimpleLoader
-from scripts.clustering import Clusterer, ClusterConstructor
+from lib.data import SimpleLoader
+from lib.clustering import Clusterer, ClusterConstructor
 
 # -- Definitions --------------------------------------------------------------
 
