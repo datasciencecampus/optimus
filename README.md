@@ -9,7 +9,7 @@ information to allow aggregation of data. Please note that this project is
 intended to work on short descriptions, of no more than around 10 words. For longer
 text descriptions you may need to fork the repository and optimise some of the metrics.
 
-For further information on the methodology please read our [blog](https://datasciencecampus.ons.gov.uk/?p=1997).
+For further information on the methodology please read our [blog](https://datasciencecampus.ons.gov.uk/o-p-t-i-m-u-s-turning-free-text-lists-into-hierarchical-datasets).
 
 ## WIP
 
