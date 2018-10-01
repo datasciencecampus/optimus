@@ -191,13 +191,35 @@ o.replace_model(fastText.load_model('string/path/to/model'))
 # Delete the existing model in the Optimus object
 o.replace_model()
 ```
+## Embedding plot functions
+
+This pipeline comes with a helpful embedding visualiser module.
+This set of functions will allow users to pass in a pandas series full
+of text entries and a fastText model and use the model to embed these
+strings into first a n dimensional space which will then be reduced to 2 dimensional space using t-SNE.
+
+This will then be plotted and exported into a 'embedding_plot.html'
+which is fully interactive.
+
+```python
+import pandas as pd
+from lib.emplot import plot
+
+series = pd.Series(['string1', ..., 'string2'])
+plot(series=series,
+     model='path/to/model.bin',
+     output_path='output_vectors.csv')
+
+```
+
+
 
 ## Authors / Contributors
 
 #### Data Science Campus - Office for National Statistics
 * Steven Hopkins
 * Gareth Clews
-* Arturus Eidukus
+* Arturas Eidukas
 * Lucy Gwilliam
 
 #### Department for the Environment, Food and Rural Affairs
