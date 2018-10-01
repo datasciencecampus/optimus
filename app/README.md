@@ -67,6 +67,10 @@ The expects a certain structure from the input csv file. The file must have a 'c
 
 A file output from a full Optimus pipeline will work and is what was used to build this app.
 
+NOTE: when the data is presented for the user, on first glance it may seem like it only displays 150 rows per cluster. The
+rest of the data will still be displayed upon scrolling through the table, however the size of the table will not accommodate
+these extra entries.
+
 ### Smart labelling
 This feature checks the custom class input provided by user and if it finds any clusters in the dataset which have that same exact current_label as the newly provided class it will also accept these. This is particularly useful in labelling datasets with simple names.
 
@@ -94,4 +98,4 @@ If a dataset contains columns from previous iterations (particularly relevant to
 If a user is unable to relabel the cluster, they can choose to skip the cluster. To do this simply leave the dropdown for the predefined classes or the tier labelling empty and click the respective button. An empty dropdown will assign the value **'SKIPPED'** to the cluster.
 
 
-Selecting any of these options will advance the process to the next cluster. However the arrow keys at the top of the page will allow to go back and forth between clusters. Thus if a mistake is made one can go back and edit a cluster again. 
+Selecting any of these options will advance the process to the next cluster. However the arrow keys at the top of the page will allow to go back and forth between clusters. Thus if a mistake is made one can go back and edit a cluster again.

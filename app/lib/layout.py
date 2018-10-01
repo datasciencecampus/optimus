@@ -90,7 +90,7 @@ def retrieve_layout(cols, config):
                                 n_clicks_timestamp=0,
                                 className="btn btn-warning h-100 w-50"),
 
-                    ], className='row h-50 w-100')
+                    ], className='row h-50 w-100 mx-0')
 
                 ], className='col-3'),
 
@@ -192,12 +192,13 @@ def retrieve_layout(cols, config):
             dt.DataTable(
                 rows=[{}], # initialise the rows
                 row_selectable=True,
-                filterable=False,
+                filterable=True,
                 sortable=False,
                 selected_row_indices=[],
+                max_rows_in_viewport=150,
                 id='my-table')],
                 style={'width': '100%'},
-                className='row')
+                className='row h-100 mx-0')
             ])
 
     ], className='px-4')
