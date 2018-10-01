@@ -5,8 +5,7 @@ import os
 # third party
 import pandas as pd
 import numpy
-
-
+import dash_html_components as html
 from flask import send_from_directory
 from dash.dependencies import Input, Output, State
 
@@ -229,6 +228,8 @@ def update_progress(_):
         if l in keep and _['new_labels'].notnull().all()
     ])
     n = len(keep)
+    if i == n:
+        return html.H4('All clusters labelled!', className='text-success')
     return f'Classified so far: {i}/{n} ({int((i/n)*100)}%)'
 
 
