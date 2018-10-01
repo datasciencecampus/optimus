@@ -8,7 +8,7 @@ A `quickstart.sh` script is provided within the app folder. This script will ins
 ## The manual set up
 In order for the app to run correctly you will need python 3 and the following python modules:
 ```
-dash (working with 0.22.0)
+dash
 dash-core-components
 dash-html-components
 plotly
@@ -79,6 +79,8 @@ This behaviour might not always be wanted.
 ## Usage
 The app will respect the cluster size threshold provided in the config.json file. It will thus select cluster that are larger or equal that size. The selected cluster labels will be presented to the user to categorise and relabel. The non-selected cluster based on this threshold will get a new label assigned as **'SKIPPED'**
 
+Options 1-4 of the relabelling procedures presented further will be applied to (a) the full dataset if none of the checkboxes are ticked or (b) to the rows that are selected (if any are selected). Meaning that the user can pick which rows get properly classified. Option 5 will always be applied to the whole cluster.
+
 There are several relabelling options.
 1. *Accepting the automatically assigned label.*
 If the label in the current_label fit the actual contents of the cluster, then the user can simply accept the label using the **'Accept'** button and proceed to the next cluster.
@@ -92,4 +94,4 @@ If a dataset contains columns from previous iterations (particularly relevant to
 If a user is unable to relabel the cluster, they can choose to skip the cluster. To do this simply leave the dropdown for the predefined classes or the tier labelling empty and click the respective button. An empty dropdown will assign the value **'SKIPPED'** to the cluster.
 
 
-Selecting any of these options will advance the process to the next cluster. At the moment there is no 'undo' functionality. However it most likely will be implemented in the future (no promises). This has the unfortunate consequence that if a mistake is made there is no way to go back.
+Selecting any of these options will advance the process to the next cluster. However the arrow keys at the top of the page will allow to go back and forth between clusters. Thus if a mistake is made one can go back and edit a cluster again. 

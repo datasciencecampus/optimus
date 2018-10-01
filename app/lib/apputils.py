@@ -19,7 +19,7 @@ class biter(object):
     bidirectional mock-iterator made for the purpose of crawling
     through the clusters
     """
-    def __init__(self, collection=['one','two','three','four']):
+    def __init__(self, collection=[]):
         self.collection = collection
         self.index = -1
 
@@ -86,13 +86,28 @@ def preprocess(config):
     return keep, df.columns
 
 
-def relabeling(df, config, cluster, label):
-    df.loc[(df['current_labels'] == cluster), 'new_labels'] = label
-    # this next line ensure that any entries who happen to have the same
-    # suggested label get classfied
-    if config['smart_labeling']:
-        df.loc[(df['current_labels'] == label), 'new_labels'] = label
+def relabeling(df, config, cluster, label='', col='', indices=[]):
+    # 0 Set up a filter condition for dataframe
+    condition = df['current_labels'] == cluster
+
+    if indices:
+        # 1. If indices are provided retrieve correct index values
+        indices = [n for i, n in enumerate(df[condition].index) if i in indices]
+    else:
+        # 2. If indices are empty - meaning none were specified, select all
+        indices = df[condition].index.tolist()
+
+    # 3. If col was passed asign the relevant column to the label paremeter
+    if col:
+        label = df.loc[condition, col]
+
+    # 4. Assign the label column
+    df.loc[indices, "new_labels"] = label
+    df.loc[condition, "new_labels"] = df.loc[condition, "new_labels"].fillna('SKIPPED')
+
+    # 5. Output
     df.to_csv(config['out'], index=False)
+
 
 def draw_table(value, config):
     """
@@ -116,10 +131,7 @@ def draw_table(value, config):
 
     df = df[df['current_labels'] == value]
 
-    # table colorscale
-    colorscale = [[0, '#000000'],[.5, '#e2e2e2'],[1, '#ffffff']]
-
-    new_table_figure = ff.create_table(df, colorscale=colorscale)
+    new_table_figure = df.to_dict('records')
 
     return new_table_figure
 

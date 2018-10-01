@@ -1,6 +1,7 @@
 # third party
 import dash_html_components as html
 import dash_core_components as dcc
+import dash_table_experiments as dt
 
 def retrieve_layout(cols, config):
 
@@ -48,107 +49,150 @@ def retrieve_layout(cols, config):
 
 
         html.Div([
-            html.Div([
 
+            html.Div([
                 html.Button('<',
                     id='undo',
                     n_clicks_timestamp=0,
-                    className="btn btn-secondary mb-1"),
+                    className="btn btn-warning mb-1 w-50"),
 
                 html.Button('>',
                     id='redo',
                     n_clicks_timestamp=0,
-                    className="btn btn-secondary mb-1"),
+                    className="btn btn-warning mb-1 w-50"),
+
+            ], className='row'),
+
+
+            html.Div([
+
+                html.Div([
+                    html.Div([
+
+                        html.P('Accept or reject the predicted cluster label')],
+
+                     className='row w-100 h-50 mx-0'),
+
+                    html.Div([
+
+                        html.Button('Skip',
+                                id='reject',
+                                n_clicks_timestamp=0,
+                                className="btn btn-danger h-100 w-50"),
+
+                        html.Button('Accept',
+                                id='accept',
+                                n_clicks_timestamp=0,
+                                className="btn btn-warning h-100 w-50"),
+
+                    ], className='row h-50 w-100')
+
+                ], className='col-3'),
 
                 html.Div([
 
-                    html.P('Accept or reject the predicted cluster label', className='mb-0'),
+                    html.Div([
 
-                    html.Button('Accept',
-                            id='accept',
-                            n_clicks_timestamp=0,
-                            className="btn btn-warning mb-1"),
+                        html.P('Provide a new label manually', className='mb-0'),
 
-                    html.Button('Skip',
-                            id='reject',
-                            n_clicks_timestamp=0,
-                            className="btn btn-danger mb-1 ml-1"),
-
-                    html.P('Provide a new label manually', className='mb-0'),
+                    ],className='row w-100 h-25 mx-0'),
 
                     html.Div([
-                        dcc.Input(id='my-input',
-                              placeholder='Enter a value...',
-                              type='text',
-                              value='',
-                              className='form-control'
-                              ),
-                        ], className='mb-1'),
 
-                    html.Button('Done',
-                                id='rename',
-                                n_clicks_timestamp=0,
-                                className="btn btn-secondary mb-1"),
+                        html.Div([
+                            dcc.Input(id='my-input',
+                                  placeholder='Enter a value...',
+                                  type='text',
+                                  value='',
+                                  className='form-control w-100 h-100'
+                                  ),
+                            ], className='h-40 w-100 mb-0'),
 
+                        html.Div([
+                            html.Button('Done',
+                                    id='rename',
+                                    n_clicks_timestamp=0,
+                                    className="btn btn-secondary h-100 w-100")
+                            ],className="h-50 w-100"),
 
-                ]),
+                    ],className='row w-100 h-75 mx-0'),
+
+                ], className='col-3'),
 
                 # dropdown for cluster names
                 html.Div([
+                    html.Div([
 
-                    html.P('Pick a label from a predefined list', className='mb-0'),
+                        html.P('Pick a label from a predefined list', className='mb-0'),
 
-                    dcc.Dropdown(id='my-dropdown',
-                                 options=[{'label': l, 'value': l}
-                                          for l in config['options']],
-                                 value='SKIPPED',
-                                 className='mb-1'
-                                 ),
+                    ],className='row w-100 h-25 mx-0'),
 
-                    html.Button('Done',
-                                id='pick-name',
-                                n_clicks_timestamp=0,
-                                className="btn btn-secondary mb-1")
-                ]),
+                    html.Div([
+
+                        html.Div([
+                            html.Div([
+                                dcc.Dropdown(id='my-dropdown',
+                                             options=[{'label': l, 'value': l}
+                                                      for l in config['options']],
+                                             value='SKIPPED',
+                                             className=''                                             ),
+                            ], className='h-50 w-100'),
+
+                            html.Div([
+                                html.Button('Done',
+                                            id='pick-name',
+                                            n_clicks_timestamp=0,
+                                            className="btn btn-secondary h-100 w-100")
+                                    ],className="h-50 w-100"),
+
+                        ],className='col-12 px-0'),
+
+                    ],className='row w-100 h-75 mx-0'),
+
+
+                ], className='col-3'),
 
                 # tier dropdown
                 html.Div([
 
-                    html.P('Select correct labels from previous tier:', className='mb-0'),
+                    html.Div([
+                        html.P('Select correct labels from previous tier:', className='mb-0'),
+                    ],className='row w-100 h-25 mx-0'),
 
-                    dcc.Dropdown(id='tier-dropdown',
-                                 options=[{'label': l, 'value': l}
-                                          for l in cols if 'tier_' in l],
-                                 value='SKIPPED',
-                                 className='mb-1'
-                                 ),
+                    html.Div([
+                        html.Div([
+                            dcc.Dropdown(id='tier-dropdown',
+                                         options=[{'label': l, 'value': l}
+                                                  for l in cols if 'tier_' in l],
+                                         value='SKIPPED',
+                                         className=''
+                                         ),
+                        ], className='h-50 w-100'),
 
-                    html.Button('Done',
-                                id='pick-tier',
-                                n_clicks_timestamp=0,
-                                className="btn btn-secondary mb-1"),
+                        html.Div([
+                            html.Button('Done',
+                                        id='pick-tier',
+                                        n_clicks_timestamp=0,
+                                        className="btn btn-secondary h-100 w-100"),
+                        ],className="h-50 w-100"),
 
+                    ],className='row w-100 h-75 mx-0'),
 
-                    dcc.Checklist(
-                        id='tier-checklist',
-                        options=[],
-                        values=[],
-                        labelStyle={'display':'block'}
-                        )
+                ], className='col-3'),
 
-                ]),
+        ], className='row mb-3 mt-3'),
 
-
-            ], className='col-2'),
-
+        html.Div([
             # table
-            dcc.Graph(
-                id='my-table',
-                config={
-                    'staticPlot': True,
-                    'displayModeBar': True
-                }, className='col-10')
+            dt.DataTable(
+                rows=[{}], # initialise the rows
+                row_selectable=True,
+                filterable=False,
+                sortable=False,
+                selected_row_indices=[],
+                id='my-table')],
+                style={'width': '100%'},
+                className='row')
+            ])
 
-        ], className='row pt-0 mt-0'),
-
-    ], className='')
+    ], className='px-4')

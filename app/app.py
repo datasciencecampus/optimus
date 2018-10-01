@@ -1,10 +1,12 @@
-#imports
+# imports
 # base
 import os
 
 # third party
 import pandas as pd
-import dash
+import numpy
+
+
 from flask import send_from_directory
 from dash.dependencies import Input, Output, State
 
@@ -18,9 +20,11 @@ app, config, keep, cols, gen = setup()
 
 # APP CALLBACK FUNCTIONS - The reactive brain of the app.
 # -----------------------------------------------------------------------------
+#
+
 
 @app.callback(
-    Output('my-table', 'figure'),
+    Output('my-table', 'rows'),
     [Input('my-cluster', 'children')]
 )
 def trigger(value):
@@ -29,6 +33,14 @@ def trigger(value):
     changes. Use the name of the cluster to select what will be in the table.
     """
     return draw_table(value, config)
+
+
+@app.callback(
+    Output('my-table', 'selected_row_indices'),
+    [Input('my-cluster', 'children')]
+)
+def clear_selected_indices(value):
+    return []
 
 @app.callback(
     Output('my-cluster', 'children'),
@@ -43,8 +55,7 @@ def trigger(value):
      State('my-input', 'value'),
      State('my-dropdown', 'value'),
      State('tier-dropdown', 'value'),
-     State('my-cluster', 'children'),
-     State('tier-checklist', 'values')]
+     State('my-table', 'selected_row_indices')]
 )
 def label(rename,
           accept,
@@ -57,8 +68,7 @@ def label(rename,
           label,
           premade_dropdown_value,
           tier_dropdown_value,
-          current_cluster,
-          tier_checklist_values
+          indices
           ):
 
     df = pd.read_csv(config['out'])
@@ -68,9 +78,11 @@ def label(rename,
         'reject': float(reject),
         'accept_dropdown': float(accept_dropdown),
         'tier_dropdown': float(tier_dropdown),
-        'undo':float(undo),
-        'redo':float(redo)
+        'undo': float(undo),
+        'redo': float(redo)
     }
+
+    # preload relabel function with arguments
 
     if label == '' and cluster == '':  # create the first chart
         gen.next()
@@ -85,35 +97,44 @@ def label(rename,
             return gen.next()
 
         elif btn == 'rename':
-            relabeling(df, config, cluster,  label)
+            relabeling(df=df,
+                       config=config,
+                       cluster=cluster,
+                       label=label,
+                       indices=indices)
             if label not in config['options']:
                 config['options'].append(label)
 
         elif btn == 'accept':
-            new_label = df['current_labels']
-            relabeling(df, config, cluster,  new_label)
-            for label in new_label[df['current_labels'] == current_cluster].unique():
-                if label not in config['options']:
-                    config['options'].append(label)
+            relabeling(df=df,
+                       config=config,
+                       cluster=cluster,
+                       col='current_labels',
+                       indices=indices)
+
+            # config['options'].append(
+                # df[df['current_labels'] == cluster].loc[0,'current_labels'])
 
         elif btn == 'reject':
-            relabeling(df, config, cluster,  'SKIPPED')
+            relabeling(df=df,
+                       config=config,
+                       cluster=cluster,
+                       label='SKIPPED')
 
         elif btn == 'accept_dropdown':
-            relabeling(df, config, cluster,  premade_dropdown_value)
-
+            relabeling(df=df,
+                       config=config,
+                       cluster=cluster,
+                       label=premade_dropdown_value,
+                       indices=indices)
         elif btn == 'tier_dropdown':
-            new_label = df[tier_dropdown_value].map(
-                        lambda label: label if label in tier_checklist_values
-                        else 'SKIPPED')
-            relabeling(df, config, cluster,  new_label)
-            for label in new_label[df['current_labels'] == current_cluster].unique():
-                if (label not in config['options'] and
-                   label != 'SKIPPED' and label in tier_checklist_values):
-                    config['options'].append(label)
+            relabeling(df=df,
+                       config=config,
+                       cluster=cluster,
+                       col=tier_dropdown_value,
+                       indices=indices)
 
         return gen.next()
-
 
 
 @app.callback(
@@ -168,6 +189,7 @@ def clear_tier_dropdown(_):
     """
     return ''
 
+
 @app.callback(
     Output('my-dropdown', 'options'),
     [Input('my-cluster', 'children')],
@@ -180,28 +202,9 @@ def add_to_dropdown(_):
     return [{'label': string, 'value': string}
             for string in sorted(config['options']) if string != '']
 
-@app.callback(
-    Output('tier-checklist', 'options'),
-    [Input('tier-dropdown', 'value')],
-    [State('my-cluster', 'children')]
-)
-def get_checklist(tier, cluster):
-    if tier != '':
-        df = pd.read_csv(config['out'])
-        unique = df.loc[df['current_labels'] == cluster, tier].unique()
-        return [{'label':val, 'value':val} for val in unique]
-    else:
-        return []
-
-@app.callback(
-    Output('tier-checklist', 'values'),
-    [Input('tier-checklist', 'options')],
-    [State('tier-checklist', 'options')]
-)
-def tick_all(_, options):
-    return [d['value'] for d in options]
-
 # needed to serve local css
+
+
 @app.server.route('/static/<path:path>')
 def static_file(path):
     """
