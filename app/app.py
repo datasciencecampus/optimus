@@ -31,6 +31,17 @@ def trigger(value):
     """
     Redraw the table when the cluster name in the 'my-clusters' object
     changes. Use the name of the cluster to select what will be in the table.
+
+    Parameters
+    ----------
+    value : str
+        something coming in from the children attribute of my-cluster
+
+    Returns
+    -------
+    dict
+        a dict which will populate the table with the right data.
+
     """
     return draw_table(value, config)
 
@@ -40,6 +51,22 @@ def trigger(value):
     [Input('my-cluster', 'children')]
 )
 def clear_selected_indices(value):
+    """
+    Whenever the cluster changes, the selected rows get
+    set to none.
+
+    Parameters
+    ----------
+    value : str
+        cluster name
+
+    Returns
+    -------
+    []
+        returns and empty list which then means non of the
+        entries in the table are selected
+
+    """
     return []
 
 @app.callback(
@@ -70,6 +97,45 @@ def label(rename,
           tier_dropdown_value,
           indices
           ):
+    """Short summary.
+
+    Parameters
+    ----------
+    rename : timestamp
+        timestamp indicating when rename was last pressed
+    accept : timestamp
+        timestamp indicating when accept was last pressed
+    reject : timestamp
+        timestamp indicating when reject was last pressed
+    accept_dropdown : timestamp
+        timestamp indicating when accept a premade dropdown
+        was last pressed
+    tier_dropdown : timestamp
+        timestamp indicating when accept a previous tier from
+        dropdown was last pressed
+    undo : timestamp
+        timestamp indicating when undo was last pressed
+    redo : timestamp
+        timestamp indicating when redo was last pressed
+    cluster : str
+        name of the cluster currently being processed
+    label : str
+        a label value if any that is currently typed into the
+        manual renaming
+    premade_dropdown_value : str
+        what value if any has been selected from the premade
+        dropdown
+    tier_dropdown_value : str
+        what value if any has been selected from the tier dropdown
+    indices : list
+        list of indices that the user has selected in the table
+
+    Returns
+    -------
+    str
+        a string with the name of the next cluster
+
+    """
 
     df = pd.read_csv(config['out'])
     buttons = {
@@ -143,8 +209,19 @@ def label(rename,
 )
 def update_progress(_):
     """
-    Update the progress tracker showing how many clusters were processed
-    until now.
+    Update how many clusters have been processed.
+
+    Parameters
+    ----------
+    _ : str
+        a reactive trigger for the update
+
+    Returns
+    -------
+    str
+        string representing what number of clusters have
+        been through the process
+
     """
     df = pd.read_csv(config['out'])
     i = len([
@@ -161,9 +238,21 @@ def update_progress(_):
 )
 def clear_rename(_):
     """
-    Clear the rename field after each iteration. Triggered by a change in
-    'my-cluster' children attribute.
+    whenever a new cluster is in focus
+    reset the renaming field to empty
+
+    Parameters
+    ----------
+    _ : str
+        reactive trigger for the process
+
+    Returns
+    -------
+    str
+        empty string
+
     """
+
     return ''
 
 
@@ -173,8 +262,23 @@ def clear_rename(_):
 )
 def clear_name_dropdown(_):
     """
-    Clear the dropdown and set its value to SKIPPED. This is needed if someone
-    decides to skip the cluster and clicks pick name.
+    whenever a new cluster is in focus reset
+    the premade name dropdown to empty again
+
+    Parameters
+    ----------
+    _ : str
+        reactive trigger for the process
+
+    Returns
+    -------
+    str
+        sets the value back to the default
+        which is SKIPPED. this is because
+        if people press done with nothing
+        selected this skipped value is
+        assigned
+
     """
     return 'SKIPPED'
 
@@ -185,7 +289,18 @@ def clear_name_dropdown(_):
 )
 def clear_tier_dropdown(_):
     """
-    Clear the tier dropdown value. Set it to an empty string.
+    whenever a new cluster is in focus reset
+    the tier dropdown to empty again
+
+    Parameters
+    ----------
+    _ : str
+        reactive trigger for the process
+
+    Returns
+    -------
+    str
+        empty string
     """
     return ''
 
@@ -196,8 +311,22 @@ def clear_tier_dropdown(_):
 )
 def add_to_dropdown(_):
     """
-    Add a new entry to the options of a dropdown. Returns a list which
-    then gets assigned to 'my-dropdown' options attribute.
+    Update the dropdown selection options to
+    included the latest cluster labels added
+    through renaming or accepting.
+
+    Parameters
+    ----------
+    _ : str
+        reactive trigger coming from my-cluster - children
+        attribute
+
+    Returns
+    -------
+    list
+        a list with a dictionary of values and labels
+        which will populate the dropdown as default values
+
     """
     return [{'label': string, 'value': string}
             for string in sorted(config['options']) if string != '']
@@ -211,6 +340,7 @@ def static_file(path):
     This is required to serve local CSS files. This uses the flask
     backend upon which dash is built to allow dash to load local css and
     other files.
+
     """
     static_folder = os.path.join(os.getcwd(), 'static')
     print(f'Serving stylesheets from: {static_folder}')

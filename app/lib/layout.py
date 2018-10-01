@@ -35,12 +35,14 @@ def retrieve_layout(cols, config):
             # cluster name
             html.Div([
                 html.H1('Current cluster: '),
-                html.P(id='my-cluster', className='display-3')
+                html.P(id='my-cluster', className='display-3 text-danger')
                 ], className='col-5'),
 
             html.Div([
-                html.Img(src='/static/black_logo.jpg',
-                className='img-fluid')
+                html.Div([
+                    html.Img(src='/static/color_logo.png',
+                    className='img-fluid w-75 mx-auto d-block')
+                ], className='h-100 w-100 mx-auto')
             ], className='col-5 container'),
 
 
@@ -51,17 +53,20 @@ def retrieve_layout(cols, config):
         html.Div([
 
             html.Div([
-                html.Button('<',
-                    id='undo',
-                    n_clicks_timestamp=0,
-                    className="btn btn-warning mb-1 w-50"),
+                html.Div([
+                    html.Button('<',
+                        id='undo',
+                        n_clicks_timestamp=0,
+                        className="btn btn-warning mx-1 w-25"),
 
-                html.Button('>',
-                    id='redo',
-                    n_clicks_timestamp=0,
-                    className="btn btn-warning mb-1 w-50"),
+                    html.Button('>',
+                        id='redo',
+                        n_clicks_timestamp=0,
+                        className="btn btn-warning mx-1 w-25"),
 
-            ], className='row'),
+                ], className='mx-auto w-75'),
+
+            ], className='row text-center'),
 
 
             html.Div([

@@ -15,15 +15,36 @@ from .layout import retrieve_layout
 # NON-CALLBACK FUNCTIONS REQUIRED FOR THE APP
 # -----------------------------------------------------------------------------
 class biter(object):
+    """A bidirectional iterator which ensures that the index doesn't
+    overflow in either direction. Used for generating the next
+    cluster on the list.
+
+    Parameters
+    ----------
+    collection : type
+        a `collection` of some sort to iterate through
+
+    Attributes
+    ----------
+    index : int
+        keeps track of the place in the collection
+    collection
+
     """
-    bidirectional mock-iterator made for the purpose of crawling
-    through the clusters
-    """
+
     def __init__(self, collection=[]):
         self.collection = collection
         self.index = -1
 
     def next(self):
+        """Return the next object in the collection.
+
+        Returns
+        -------
+
+        next object in the collection
+
+        """
 
         try:
             self.index += 1
@@ -35,6 +56,15 @@ class biter(object):
             return self.collection[self.index]
 
     def prev(self):
+        """return previous object in the collection
+
+        Returns
+        -------
+
+        previous object in the collection
+
+        """
+
         # prevent negative outcomes
         if self.index != 0:
             self.index -= 1
@@ -43,9 +73,16 @@ class biter(object):
 
 def config_app():
     """
-    A simple wrapper that just returns a configured
-    dash app object.
+    Configure the APP in the required manner.
+    Enables local css and js as well as sets page title to Optimus.
+
+    Returns
+    -------
+    dash_app
+        A configured dash app
+
     """
+
     # DASH CONFIGSs
     app = dash.Dash()
 
@@ -57,6 +94,22 @@ def config_app():
     return app
 
 def which_button(btn_dict):
+    """
+    Assesses which button was pressed given the time
+    each button was pressed at. It finds the latest
+    pressed button and returns the key for it.
+
+    Parameters
+    ----------
+    btn_dict : dict
+        an input dict in the form of {'button name': float(n_clicks_timestamp)}
+
+    Returns
+    -------
+    dict_key
+        Returns whatever the dict keys are for the key that was pressed latest
+
+    """
     return max(btn_dict.items(), key=operator.itemgetter(1))[0]
 
 def preprocess(config):
@@ -64,7 +117,22 @@ def preprocess(config):
     A function which uses the config provided to
     create the output files from the original data.
     On top of this it tweaks it slightly.
+
+    Parameters
+    ----------
+    config : dict
+        dictionary containing the config. just needs the paths
+        to input and output mainly.
+
+    Returns
+    -------
+    (list, pd.DataFrame.columns)
+        return a list of clusters to keep based on
+        the number of items in it as well as the columns in the
+        dataframe.
+
     """
+
     # read the base data
     df = pd.read_csv(config['data'])
 
@@ -87,6 +155,34 @@ def preprocess(config):
 
 
 def relabeling(df, config, cluster, label='', col='', indices=[]):
+    """
+    A function that handles relabeling. Used upon each button click
+    essentially to relabel the correct cluster items.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        dataframe containing the data
+    config : dict
+        dict object containing the configs for the app
+    cluster : str
+        a string containing the string name of the cluster
+    label : str
+        a string label that will be assigned unless col is provided
+    col : str
+        if col is provided this will be selected as the new label,
+        meaning that the whole column will be assigned rather than
+        a static string
+    indices : list
+        a list of indices which the user things should be replaced
+        with the new labels
+
+    Returns
+    -------
+    None
+        Returns none as all is saved in a csv file
+
+    """
     # 0 Set up a filter condition for dataframe
     condition = df['current_labels'] == cluster
 
@@ -111,7 +207,23 @@ def relabeling(df, config, cluster, label='', col='', indices=[]):
 
 def draw_table(value, config):
     """
-    This function creates a table using the plotly module.
+    Draws the table element of the app.
+
+    Parameters
+    ----------
+    value : str
+        which cluster to draw based on. it will
+        filter the file loaded in to only the entries where
+        current labels are equal to value
+    config : dict
+        a dict file containing the app settings
+
+    Returns
+    -------
+    dict
+        a dict required by the table object in the main app
+        to populated the table with the data.
+
     """
     def _prepare_for_show(frame):
         frame = frame.drop('new_labels', axis=1)
@@ -137,6 +249,24 @@ def draw_table(value, config):
 
 
 def setup(config_path='config.json'):
+    """
+    Launch and orchestrate the whole set up process.
+    It uses the config function as well as some other functions
+    defined above to produce the initial parameters and state
+    of the app.
+
+    Parameters
+    ----------
+    config_path : str
+        Path to the config of the app
+
+    Returns
+    -------
+    (app, dict, list, iterator)
+        returns the app, the config file, the clusters list to keep
+        and the iterator which will allow navigation through clusters
+
+    """
     # CREATE APP
     app = config_app()
 
