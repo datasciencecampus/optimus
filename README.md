@@ -213,6 +213,26 @@ plot(series=series,
 ```
 
 
+## Working with large datasets
+
+Ward linkage is computationally expensive. The process needs to calculate a
+pairwise distance matrix for all of the embedded vectors and this is of order
+$n^2$ for $n$ data points, in memory consumption. When you factor in that the
+models for the fastText embedding are already gigabytes in size this can become
+a problem.
+
+Where data starts to push the boundaries of what is available to the process we
+currently recommend performing a sampling of your data points, using optimus to
+categorise the labelled points and then using (for example) a knn to 'smear' the
+generated labels across the points nearby.
+
+Example code to do this is provided in the `sampling/` directory. The program
+performs a simple random sample of the content of your list and then embeds
+these words before using the approach outlined above to generate labels for the
+out of sample words. This approach is naive, but can provide a starting point
+for more complex sampling mechanisms such as the use of
+[apricot](https://github.com/jmschrei/apricot).
+
 
 ## Authors / Contributors
 
