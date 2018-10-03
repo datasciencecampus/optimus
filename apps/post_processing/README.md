@@ -1,4 +1,4 @@
-# Optimus app documentation
+# Optimus post-processing app documentation
 # NOTE:
 The UI and UX of the app are very experimental. They are subject to change quite substantially in the remaining time that this app will be supported/developed. Feedback on this is appreciated.
 ## Quickstart (Linux and MacOS)
@@ -11,6 +11,7 @@ In order for the app to run correctly you will need python 3 and the following p
 dash
 dash-core-components
 dash-html-components
+dash-table-experiments
 plotly
 flask
 pandas
