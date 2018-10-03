@@ -62,15 +62,6 @@ def retrieve_layout():
 
                     html.Div([
 
-                    # """
-                    # <div class="input-group input-group-sm mb-3">
-                    #   <div class="input-group-prepend">
-                    #     <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-                    #   </div>
-                    #   <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                    # </div>
-                    #
-                    # """
                         html.Div([
                             html.Div([
                                 html.Span('Stepsize', className='input-group-text')
@@ -88,6 +79,12 @@ def retrieve_layout():
                                 html.Span('Distance', className='input-group-text')
                             ], className='input-group-prepend'),
                             dcc.Input(id='distance', className='form-control'),
+                        ], className='input-group mb-2 mx-auto'),
+                        html.Div([
+                            html.Div([
+                                html.Span('Model path', className='input-group-text')
+                            ], className='input-group-prepend'),
+                            dcc.Input(id='model', className='form-control'),
                         ], className='input-group mb-2 mx-auto'),
 
 
@@ -133,7 +130,7 @@ def retrieve_layout():
 
                     html.Div([
 
-                        html.H3('Preview of data'),
+                        html.H3('Preview of data (scrollable & filterable)'),
 
                         dt.DataTable(
                             rows=[{}],

@@ -123,13 +123,15 @@ def optimus(_):
      State('stepsize','value'),
      State('cutoff','value'),
      State('distance','value'),
+     State('model','value'),
     ]
 )
 def ingest_settings(_,
                     settings_field,
                     stepsize,
                     cutoff,
-                    distance):
+                    distance,
+                    model):
     """
     Short summary.
 
@@ -174,7 +176,8 @@ def ingest_settings(_,
             **dealwithsettings(settings_field,
                               stepsize=stepsize,
                               distance=distance,
-                              cutoff=cutoff)
+                              cutoff=cutoff),
+            model=model
             )
 
         with open(path+'o','wb+') as f:
