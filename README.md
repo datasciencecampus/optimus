@@ -58,6 +58,13 @@ download the model and then you can move it to be local to your working director
 
 There is a quick start example script that demonstrates how to use the pipeline called `example.py` in the root directory. The final dataset is written to `optimus_results.csv` also in the root directory.
 
+
+## A graphical UI for running Optimus
+
+In order to make the tool more accessible a web app based UI was developed. This user interface will help process data without the need of any python coding.
+
+If this is something that interests you please read [this README.md](apps/pipeline_launcher/readme.md) file for more info.
+
 ## How to use the python module
 
 #### Importing Optimus
