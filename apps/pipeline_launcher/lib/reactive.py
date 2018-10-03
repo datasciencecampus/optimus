@@ -170,7 +170,6 @@ def ingest_settings(_,
 
         o = Optimus(
             config_path='config.json',
-            model='/Users/arturas/projects/optimus-app/model/wiki.en.bin',
             data=path+'uploaded_data.csv',
             **dealwithsettings(settings_field,
                               stepsize=stepsize,
