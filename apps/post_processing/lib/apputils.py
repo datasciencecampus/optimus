@@ -12,6 +12,7 @@ import plotly.figure_factory as ff
 # project
 from .layout import retrieve_layout
 
+
 # NON-CALLBACK FUNCTIONS REQUIRED FOR THE APP
 # -----------------------------------------------------------------------------
 class biter(object):
