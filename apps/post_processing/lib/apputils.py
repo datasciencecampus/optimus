@@ -134,7 +134,7 @@ def preprocess(config):
     """
 
     # read the base data
-    df = pd.read_csv(config['data'])
+    df = pd.read_csv(config['data'], encoding=config['encoding'])
 
     # strip the current labels to remove impact of spaces
     df['current_labels'] = df['current_labels'].str.strip()
