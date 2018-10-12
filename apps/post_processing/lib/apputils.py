@@ -203,7 +203,7 @@ def relabeling(df, config, cluster, label='', col='', indices=[]):
     df.loc[condition, "new_labels"] = df.loc[condition, "new_labels"].fillna('SKIPPED')
 
     # 5. Output
-    df.to_csv(config['out'], encoding=config['encoding'] index=False)
+    df.to_csv(config['out'], encoding=config['encoding'], index=False)
 
 
 def draw_table(value, config):
