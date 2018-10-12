@@ -100,3 +100,14 @@ If a user is unable to relabel the cluster, they can choose to skip the cluster.
 
 
 Selecting any of these options will advance the process to the next cluster. However the arrow keys at the top of the page will allow to go back and forth between clusters. Thus if a mistake is made one can go back and edit a cluster again.
+
+## Selecting individual rows
+
+By using the tickboxes next to the data only the data that is selected will be processed. However if there is a case of a cluster similar
+to:
+
+```
+['fish','meat','meat','fish']
+```
+
+If you select entries with fish and classify them into `aquatic animals` the app will push you into the next cluster and assigned `SKIPPED` but only on the first pass over the cluster. However if a user wants to also classify the `meat` as well they can use the arrows to go back and select the meat entries and assign a new label. Only those entries will be overwritten. The already existing fish labels will not be overwritten.
