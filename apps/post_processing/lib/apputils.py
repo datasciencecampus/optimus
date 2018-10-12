@@ -150,7 +150,7 @@ def preprocess(config):
            'new_labels'] = 'SKIPPED'
 
     # save a copy of the data for the further pipeline
-    df.to_csv(config['out'], index=False)
+    df.to_csv(config['out'], encoding=config['encoding'], index=False)
 
     return keep, df.columns
 
@@ -203,7 +203,7 @@ def relabeling(df, config, cluster, label='', col='', indices=[]):
     df.loc[condition, "new_labels"] = df.loc[condition, "new_labels"].fillna('SKIPPED')
 
     # 5. Output
-    df.to_csv(config['out'], index=False)
+    df.to_csv(config['out'], encoding=config['encoding'] index=False)
 
 
 def draw_table(value, config):
@@ -240,7 +240,7 @@ def draw_table(value, config):
 
         return frame
 
-    df = _prepare_for_show(pd.read_csv(config['out']))
+    df = _prepare_for_show(pd.read_csv(config['out'], encoding=config['encoding']))
 
     df = df[df['current_labels'] == value]
 

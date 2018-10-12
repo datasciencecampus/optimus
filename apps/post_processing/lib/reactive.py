@@ -133,7 +133,7 @@ def label(rename,
 
     """
 
-    df = pd.read_csv(config['out'])
+    df = pd.read_csv(config['out'], encoding=config['encoding'])
     buttons = {
         'rename': float(rename),
         'accept': float(accept),
@@ -219,7 +219,7 @@ def update_progress(_):
         been through the process
 
     """
-    df = pd.read_csv(config['out'])
+    df = pd.read_csv(config['out'], encoding=config['encoding'])
     i = len([
         l for l, _ in df.groupby('current_labels')
         if l in keep and _['new_labels'].notnull().all()
