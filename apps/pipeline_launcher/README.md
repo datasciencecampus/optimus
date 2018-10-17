@@ -43,6 +43,11 @@ python app.py
 1. After ensuring the app runs, the next step is to upload the data.
 Click the 'Upload string data' button. Then navigate to the location of the relevant csv file. After confirming a preview of the data should appear in the bottom of the app.
 
+NOTE: The uploads accept `csv` and `xls` files. If using `.csv` please ensure
+the data is able to be read in with a csv parser. Meaning strings containing
+commas might break the process and the result will be an empty dataset being
+previewed.
+
 2. After the data has been loaded the next step is to configure the optimus object. There are 2 ways of doing so.
    * The first way to configure optimus is mostly useful if there are only a few settings that you would like to change. In which case use the predefined boxes with the appropriate setting names.
 
