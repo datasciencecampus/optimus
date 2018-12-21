@@ -11,9 +11,6 @@ text descriptions you may need to fork the repository and optimise some of the m
 
 For further information on the methodology please read our [blog](https://datasciencecampus.ons.gov.uk/o-p-t-i-m-u-s-turning-free-text-lists-into-hierarchical-datasets).
 
-## WIP
-
-This is a working prototype of the pipeline and is still in development. The full release of the methodology and supporting web app is scheduled for the end of 2018.
 
 ## Getting Started
 
