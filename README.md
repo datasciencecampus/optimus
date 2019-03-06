@@ -36,6 +36,11 @@ Firstly the user should clone this git repository
 ```
 git clone git@github.com:datasciencecampus/optimus
 ```
+or 
+```
+git clone https://github.com/datasciencecampus/optimus.git
+
+```
 
 Within the repo is a file named `setup.zsh`. This is a command line tool to
 install all of the other things you need. For help using this, invoke the script
