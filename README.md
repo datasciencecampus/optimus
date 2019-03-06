@@ -34,10 +34,6 @@ You will need the following tools in order to be able to set up and use optimus:
 
 Firstly the user should clone this git repository
 ```
-git clone git@github.com:datasciencecampus/optimus
-```
-or 
-```
 git clone https://github.com/datasciencecampus/optimus.git
 
 ```
