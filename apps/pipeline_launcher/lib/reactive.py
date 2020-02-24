@@ -163,7 +163,7 @@ def ingest_settings(_,
         kwargs = {k:int(v) for k,v in kwargs.items() if v != None}
 
         if settings_field:
-            return {**kwargs, **parse_settings(settings_field)}
+            return {**parse_settings(settings_field), **kwargs}
 
         return kwargs
 
