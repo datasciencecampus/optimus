@@ -1,7 +1,7 @@
 ---
 layout: docs
 docid: "contributing"
-title: "Getting Help and Contributing"
+title: "Contributing"
 permalink: /docs/contributing.html
 subsections:
   - id: what-to-contribute

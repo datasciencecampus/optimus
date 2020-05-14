@@ -10,22 +10,23 @@ subsections:
 
 <a id="install"> </a>
 
-optimus.py has been developed to work on both Windows and MacOS.
+Firstly the user should clone the git repository
+```
+git clone https://github.com/datasciencecampus/optimus.git
 
-Please make sure Python 3.6 is installed and set in your path.  To check the Python version default for your system, run the following in command line/terminal:
-
-```bash
-# Bash
-python --version
 ```
 
-**_Note_**: If Python 2.x is the default Python version, but you have installed Python 3.x, your path may be setup to use `python3` instead of `python`.
+Within the repo is a file named `setup.zsh`. This is a command line tool to
+install all of the other things you need. For help using this, invoke the script
+as
 
-To install pyGrams packages and dependencies, from the root directory (./optimus) run:
-
-```bash
-# Bash 
-pip install -e .
+``` bash
+Bash
+. setup.zsh -h
 ```
 
-This will install all the libraries and then download their required datasets.
+This script allows you to download the [FastText wikipedia word
+embeddings](https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md)
+model and places it in the optimus directory. If your project is elsewhere and
+you are not working in optimus directly then it is recommended to use this script to
+download the model and then you can move it to be local to your working directory.
