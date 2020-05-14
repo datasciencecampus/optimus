@@ -1,5 +1,7 @@
 # o p t i m u s
 
+<p align="center"><img align="center" src="optimus-logo.png" width="200px"></p>
+
 A text processing pipeline for turning unstructured text data into hierarchical datasets.
 
 ## What does Optimus do?
