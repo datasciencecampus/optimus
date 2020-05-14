@@ -1,0 +1,13 @@
+- title: Make sense of unlabelled list data.
+  text: |
+        Turn unlabelled list data into categories to better understand clusters.
+  align: left
+
+- title: Improve analytical efficiency.
+  text: |
+        Unstructered data usually requires a significant amount of manual processing which can be impractical for large datasets.
+
+- title: Customise to your needs.
+  text: |
+        Optimus can be customised using a configuration file allowing the user to be in control of the process.
+
