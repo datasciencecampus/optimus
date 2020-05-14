@@ -1,187 +1,276 @@
-# propeR
+# o p t i m u s
 
-**prope** [latin] _verb_
-**Definitions:**
-1. near, nearby;
-2. almost;
-3. close by
+<p align="center"><img align="center" src="optimus-logo.png" width="200px"></p>
 
-<p align="center"><img align="center" src="proper/meta/logo/propeR_logo_v1.png" width="200px"></p>
+A text processing pipeline for turning unstructured text data into hierarchical datasets.
 
-## Contents
+## What does Optimus do?
+The Data Science Campus has been exploring how to process unlabelled list data
+that is collected manually in an uncontrolled fashion with no supplementary
+information to allow aggregation of data. Please note that this project is
+intended to work on short descriptions, of no more than around 10 words. For longer
+text descriptions you may need to fork the repository and optimise some of the metrics.
 
-* [Introduction](#introduction)
-* [Software Prerequisites](#software-prerequisites)
-* [Installing propeR](#installing-proper)
-  * [R installation](#r-installation)
-  * [Docker installation](#docker-installation)
-* [Running propeR](#running-proper)
-  * [Data prerequisites](#data-prerequisites)
-  * [Using R](#using-rstudio)
-  * [Using Docker](#using-docker)
-* [FAQ](#faq)  
-* [Acknowledgments](#acknowledgments)  
-* [Contributions and Bug Reports](#contributions-and-bug-reports)  
-* [Licence](#licence)  
+For further information on the methodology please read our [blog](https://datasciencecampus.ons.gov.uk/o-p-t-i-m-u-s-turning-free-text-lists-into-hierarchical-datasets).
 
 
-## Introduction
+## Getting Started
 
-This R package ([propeR](https://github.com/datasciencecampus/proper)) was created to analyse multimodal transport for a number of research projects at the [Data Science Campus, Office for National Statistics](https://datasciencecampus.ons.gov.uk/). This repository is for the installation and use of propeR only, for all OTP graph related guidance, please see [graphite](https://github.com/datasciencecampus/graphite).
+These instructions will get you a copy of the project up and running on your
+local machine for development and testing purposes.
 
-## Software Prerequisites
+Documentation on the methods utilised and how Optimus functions is pending. This
+README will be updated to include links to this material once it is made available.
 
-* R and your GUI of choice, such as RStudio, OR
-* Docker
+### Prerequisites
 
-## Installing propeR
+You will need the following tools in order to be able to set up and use optimus:
 
-### R installation
+- A modern MacOS or linux installation, Windows is not supported and
+  you are on your own trying it there
+- [curl](https://curl.haxx.se/)
+- [zsh](https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH)
+- [python 3.6](https://www.python.org) or later
+- [git](https://git-scm.com)
 
-The easiest method is to install direct from this GitHub repository using:
 
+Firstly the user should clone this git repository
 ```
-library(devtools)
-install_github("datasciencecampus/access-to-services/propeR")
-```
-
-Failing this, you can pull this repository and install locally using:
-
-```
-install("propeR/dir/here")
-```
-
-#### R building
-
-If neither method above works. Or you wish to make changes to the package. Then you will need to build the package. Building propeR requires devtools and roxygen2:
-
-```
-# R
-install.packages("devtools")
-install.packages("roxygen2")
-```
-
-Then:
-
-```
-build("propeR/dir/here")
-install("propeR/dir/here")
-```
-
-Once you have installed propeR using RStudio you can now [start using it in RStudio.](#using-rstudio)
-
-### Docker installation
-
-For convenience we have created a [Docker](https://www.docker.com/) image for
-the [propeR R package](https://github.com/datasciencecampus/access-to-services/tree/develop/propeR).
-
-The propeR R package can be built from the parent directory as follows:
-
-```
-cd to/propeR/dir/
-docker build . --tag=dsc_proper
-```
-
-Or you can build from the [online docker image](https://hub.docker.com/u/datasciencecampus), using:
-
-```
-docker run datasciencecampus/dsc_proper:1.0
-```
-
-See [Dockerfile](Dockerfile) for more information and dependencies. Once you have installed propeR using Docker you can now [start using it in Docker.](#using-docker)
-
-## Running propeR
-
-Function examples are [available here](https://github.com/datasciencecampus/proper/tree/master/example.md)
-
-### Data prerequisites
-
-All location data (origin and destination) must be in comma separated (CSV) format and contain the following columns:
-* A unique ID column
-* A latitude column, where data is in decimal degrees (or a postcode column)
-* A longitude column, where data is in decimal degrees (or a postcode column)
-
-The CSV file must contain headers, the header names can be specified in **`importLocationData()`**.
-
-### Using RStudio
-
-As with any R package, it can be loaded in an R session using:
-
-```
-#R
-library(propeR)
-```
-
-### Using Docker
-
-Alternatively. If you have installed propeR using Docker you can use Docker to run propeR. Put source and destination `.csv` data in a directory, e.g., `/tmp/data/`. Example data files `origin.csv` and `destination.csv` can be found in `propeR/inst/extdata/`, then:
-
-```
-docker run -v /tmp/data:/mnt datasciencecampus/dsc_proper:1.0 'otp.host="XXX.XXX.X.X", fun="pointToPoint", src_file="/mnt/origin.csv", dst_file="/mnt/destination.csv", output.dir="/mnt", startDateAndTime="2019-08-02 12:00:00"'
-```
-
-where `otp.host` is your inet address, which can be found using:
-
-```
-/sbin/ifconfig |grep inet |awk '{print $2}'
+git clone https://github.com/datasciencecampus/optimus.git
 
 ```
 
-Output data will be in `tmp/data/`.
+Within the repo is a file named `setup.zsh`. This is a command line tool to
+install all of the other things you need. For help using this, invoke the script
+as
 
-
-## FAQ
-
-Q: How accurate is the cost calculation in the point to point functions?
-
->A: The tool currently cannot ingest fare information. Therefore `costEstimate` can be used in the point to point functions. This provides an *estimate* based on the values given in the parameters `busTicketPrice`, `busTicketPriceMax`, `trainTicketPriceKm` and `trainTicketPriceMin`.
-
-Q: How to I stop propeR printing to the R console:
-
->A: All functions have a parameter called `infoPrint`. This by default is set to `T`, please set to `F` if you want to prevent console printing.
-
-Q: I found a bug!
-
->A: Please use the GitHub issues form to provide us with the information ([here](https://github.com/datasciencecampus/proper/issues))
-
-### Common errors
-
-Q: Why am I receiving the following error when running propeR?
-
-```
-Error in curl::curl_fetch_memory(url, handle = handle) :
-  Failed to connect to localhost port 8080: Connection refused
-Called from: curl::curl_fetch_memory(url, handle = handle)
+``` sh
+. setup.zsh -h
 ```
 
-> A: The OTP server has not been initiated. Please see [graphtie](https://github.com/datasciencecampus/graphite) of this guide.
+This script allows you to download the [FastText wikipedia word
+embeddings](https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md)
+model and places it in the optimus directory. If your project is elsewhere and
+you are not working in optimus directly then it is recommended to use this script to
+download the model and then you can move it to be local to your working directory.
 
-Q: Why am I receiving the following error when running propeR?
+### Quick Start example
+
+There is a quick start example script that demonstrates how to use the pipeline called `example.py` in the root directory. The final dataset is written to `optimus_results.csv` also in the root directory.
+
+
+## A graphical UI for running Optimus
+
+In order to make the tool more accessible a web app based UI was developed. This user interface will help process data without the need of any python coding.
+
+If this is something that interests you please read [this README.md](apps/pipeline_launcher/readme.md) file for more info.
+
+## How to use the python module
+
+#### Importing Optimus
+Import Optimus into python either through the whole module
+
+  * `import optimus`
+
+or by importing the Optimus classes
+
+  * `from optimus import Optimus`
+
+#### Customise settings for Optimus
+
+Configuration of the pipeline is controlled with a configuration file
+`config.json` file in the following format:
+
+```json
+  {
+    "data":"location/to/data.csv",
+    "model":"location/to/wiki.en.bin"
+    ...
+  }
+```
+
+After creating a `config.json` file, the location can be passed when creating an
+instance of Optimus:
+
+```python
+o = Optimus(config_path='path/to/config.json', ...)
+```
+
+Further settings can be added on an ad hoc basis and will overwrite any previous
+settings. To do so, pass in valid arguments into the Optimus class upon
+construction like so:
+
+```python
+o = Optimus(
+      config_path='path/to/config.json',
+      data="path/to/new_data.csv",
+      cutoff=6,
+      ...
+  )
+```
+
+Optimus has a default settings file to fall back on in case none of this is
+provided however using just default settings might cause issues. This is mainly
+due to the path specifications to the data and models in the default settings
+not being accurate.
+
+The file `etc/config.json` stores the default arguments used by Optimus. Please
+do not edit this file.
+
+
+Shortened reference:
+
+ 1. `obj = Optimus()` -> Uses default settings
+ 2. `obj = Optimus(config_path='path/to/user/config.json')`
+     -> Uses custom config file
+ 3. `obj = Optimus(distance=10, stepsize=2, cutoff=16 ...)`
+    -> replace specific parameter values instead of those defined in the config
+    file.
+
+
+#### Running the code & getting outputs
+
+Optimus takes in `pandas.core.series.Series` objects. In order to run a
+configured Optimus object on a series, simply call the object and enclose the
+desired series in the brackets. For example, for a pandas series called `text`:
+
+``` python
+from optimus import Optimus
+
+O = Optimus()
+results = O(text)
+```
+
+**NOTE**: If no data is passed into the the Optimus object the data defined in
+the config file will be used.
+
+
+##### Additional arguments to Optimus:
+
+* **save_csv**
+One can pass `save_csv` as an optional keyword argument. If the value is set to
+`save_csv=True` this will force Optimus to save the output DataFrame which
+includes all the labels from each iteration in the working directory as
+labelled.csv.
+
+
+* **full**
+Similarly if one just needs a dataframe to be returned and not saved, use the
+full=True setting to receive back the dataframe containing the mapped labels.
+
+
+* **verbose**
+A boolean value which will dictate how much will be printed to the console as
+the code runs. Some outputs are still maintained in the console even if
+`verbose=False` as this allows some idea of progress of the processing.
+
+
+## Managing Memory
+
+The fastText model is large and requires a sizeable amount of RAM. Each instance
+of optimus will load its own fast text model on the first processing call. It
+does this by checking if the model was loaded before and if not will perform a
+`ft.load_model()` operation. Once its loaded, all subsequent runs (based on the
+same instance of Optimus) should not reload a model.
+
+#### Replacing models and freeing memory
+
+The Optimus object has a `replace_model` method. This method aims to provide a
+way to control the memory usage of the Optimus object. This method allows a user
+to reload and replace a new model or just to remove the loaded model from the
+Optimus object.
+
+The method takes a string or a fastText loaded model and assigns it to the
+Optimus object. If no model parameter is passed, the method will simply delete
+and garbage collect the existing loaded model.
+
+
+```python
+o = Optimus(args, kwargs)
+output = o(some_data)
+
+# Load from a path
+o.replace_model('string/path/to/model')
+
+# Provide an already loaded model
+o.replace_model(fastText.load_model('string/path/to/model'))
+
+# Delete the existing model in the Optimus object
+o.replace_model()
+```
+## Embedding plot functions
+
+This pipeline comes with a helpful embedding visualiser module.
+This set of functions will allow users to pass in a pandas series full
+of text entries and a fastText model and use the model to embed these
+strings into first a n dimensional space which will then be reduced to 2 dimensional space using t-SNE.
+
+This will then be plotted and exported into a 'embedding_plot.html'
+which is fully interactive.
+
+```python
+import pandas as pd
+from lib.emplot import plot
+
+series = pd.Series(['string1', ..., 'string2'])
+plot(series=series,
+     model='path/to/model.bin',
+     output_path='output_vectors.csv')
 
 ```
-Error in paste0(otpcon, "/plan") : object 'otpcon' not found
+
+
+## Working with large datasets
+
+Ward linkage is computationally expensive. The process needs to calculate a
+pairwise distance matrix for all of the embedded vectors and this is of order
+$n^2$ for $n$ data points, in memory consumption. When you factor in that the
+models for the fastText embedding are already gigabytes in size this can become
+a problem.
+
+Where data starts to push the boundaries of what is available to the process we
+currently recommend performing a sampling of your data points, using optimus to
+categorise the labelled points and then using (for example) a knn to 'smear' the
+generated labels across the points nearby.
+
+Example code to do this is provided in the `sampling/` directory. The program
+performs a simple random sample of the content of your list and then embeds
+these words before using the approach outlined above to generate labels for the
+out of sample words. This approach is naive, but can provide a starting point
+for more complex sampling mechanisms such as the use of
+[apricot](https://github.com/jmschrei/apricot).
+
+
+## Authors / Contributors
+
+#### Data Science Campus - Office for National Statistics
+* Steven Hopkins
+* Gareth Clews
+* Arturas Eidukas
+* Lucy Gwilliam
+
+#### Department for the Environment, Food and Rural Affairs
+* Tom Hopkinson
+
+## License
+
+This project is licensed under the MIT License - see the
+[LICENSE.md](LICENSE.md) file for details
+
+## References
+
+### Bag of Tricks for Efficient Text Classification
+
+[1] A. Joulin, E. Grave, P. Bojanowski, T. Mikolov, [*Bag of Tricks for Efficient Text Classification*](https://arxiv.org/abs/1607.01759)
+
 ```
-
-> A: The OTP connection has not been established. Please see [graphtie](https://github.com/datasciencecampus/graphite) of this guide.
-
-## Acknowledgments
-
-* [TransXChange2GTFS](https://github.com/danbillingsley/TransXChange2GTFS)
-* [transxchange2gtfs](https://github.com/planarnetwork/transxchange2gtfs)
-* [dtd2mysql](https://github.com/open-track/dtd2mysql)
-* [OpenTripPlanner](http://www.opentripplanner.org/)
-* functions `otpConnect()`, `otpTripTime()`, `otpTripDistance()`, `otpIsochrone()` are modified from Marcus Young's repo [here](https://github.com/marcusyoung/opentripplanner/blob/master/Rscripts/otp-api-fn.R)
-
-## Contributions and Bug Reports
-
-We welcome contributions and bug reports. Please do this on this repo and we will endeavour to review pull requests and fix bugs in a prompt manner.
-
-Built and tested on OS and Windows using R version 3.5.2.
-
-## Licence
-
-The Open Government Licence (OGL) Version 3
-
-Copyright (c) 2018 Office of National Statistics
-
-This source code is licensed under the Open Government Licence v3.0. To view this licence, visit [www.nationalarchives.gov.uk/doc/open-government-licence/version/3](www.nationalarchives.gov.uk/doc/open-government-licence/version/3) or write to the Information Policy Team, The National Archives, Kew, Richmond, Surrey, TW9 4DU.
+@InProceedings{joulin2017bag,
+  title={Bag of Tricks for Efficient Text Classification},
+  author={Joulin, Armand and Grave, Edouard and Bojanowski, Piotr and Mikolov, Tomas},
+  booktitle={Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 2, Short Papers},
+  month={April},
+  year={2017},
+  publisher={Association for Computational Linguistics},
+  pages={427--431},
+}
+```

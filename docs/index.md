@@ -1,6 +1,6 @@
 ---
 layout: home
-title: proper
+title: optimus
 id: home
 ---
 
