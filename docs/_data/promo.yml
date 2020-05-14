@@ -5,10 +5,10 @@
   children:
   - type: button
     href: docs/installation.html
-    text: Install proper
+    text: Install optimus
   - type: button
     href: docs/quick_start.html
     text: Getting started
   - type: button
-    href: https://datasciencecampus.ons.gov.uk/access-to-services-using-multimodal-transport-networks/
+    href: https://datasciencecampus.ons.gov.uk/o-p-t-i-m-u-s-turning-free-text-lists-into-hierarchical-datasets
     text: Read the blog post
