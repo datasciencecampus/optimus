@@ -16,9 +16,9 @@ subsections:
     id: custom-settings
   - title: Running the code & getting outputs
     id: getting-outputs
-  - title: Additional arguments to Optimus
+  - title: Additional arguments to optimus
     id: additional-arguments
-  - title: Managing Memory
+  - title: Managing memory
     id: managing-memory
   - title: Replacing models and freeing memory
     id: replacing-models-and-freeing-memory
@@ -63,7 +63,7 @@ There is a quick start example script that demonstrates how to use the pipeline 
 
 In order to make the tool more accessible a web app based UI was developed. This user interface will help process data without the need of any python coding.
 
-If this is something that interests you please read [this README.md](apps/pipeline_launcher/readme.md) file for more info.
+If this is something that interests you please read [this README.md](https://github.com/datasciencecampus/optimus/blob/master/apps/pipeline_launcher/README.md) file for more info.
 
 <a id="importing"> </a>
 
@@ -95,6 +95,7 @@ After creating a `config.json` file, the location can be passed when creating an
 instance of Optimus:
 
 ```python
+# Python
 o = Optimus(config_path='path/to/config.json', ...)
 ```
 
@@ -103,6 +104,7 @@ settings. To do so, pass in valid arguments into the Optimus class upon
 construction like so:
 
 ```python
+# Python
 o = Optimus(
       config_path='path/to/config.json',
       data="path/to/new_data.csv",
@@ -149,7 +151,7 @@ the config file will be used.
 
 <a id="additional-arguments"> </a>
 
-##### Additional arguments to Optimus:
+##### Additional arguments to Optimus
 
 * **save_csv**
 One can pass `save_csv` as an optional keyword argument. If the value is set to
@@ -193,6 +195,7 @@ and garbage collect the existing loaded model.
 
 
 ```python
+# Python
 o = Optimus(args, kwargs)
 output = o(some_data)
 
@@ -220,6 +223,7 @@ This will then be plotted and exported into a 'embedding_plot.html'
 which is fully interactive.
 
 ```python
+# Python
 import pandas as pd
 from lib.emplot import plot
 
