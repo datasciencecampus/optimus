@@ -16,7 +16,7 @@ subsections:
     id: custom-settings
   - title: Running the code & getting outputs
     id: getting-outputs
-  - title: Additional arguments to Optimus:
+  - title: Additional arguments to Optimus
     id: additional-arguments
   - title: Managing Memory
     id: managing-memory
