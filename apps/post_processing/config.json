@@ -1,9 +1,0 @@
-{
-  "data":"optimus_results.csv",
-  "out":"output.csv",
-  "min_cluster":2,
-  "options":[""],
-  "smart_labeling":false,
-  "tiers":2,
-  "encoding":"latin-1"
-}
